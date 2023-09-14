@@ -14,23 +14,33 @@ pipx install git+https://github.com/juftin/llm-cli
 
 ## Usage
 
-Make sure you have an OpenAI API key set as an environment variable:
-
-```shell
-export OPENAI_API_KEY="xxxxxxxxxxxxxx"
-```
-
 Then, you can chat with the model directly from the command line:
 
 ```shell
 llm-cli
 ```
 
+Make sure you have an OpenAI API key set as an environment variable
+(this can also set via the `--api-key` / `-k` flag in the CLI):
+
+```shell
+export OPENAI_API_KEY="xxxxxxxxxxxxxx"
+```
+
 Optionally, you can set a custom model. LLM-CLI defaults
-to `gpt-3.5-turbo`:
+to `gpt-3.5-turbo` (this can also set via the
+`--model` / `-m` flag in the CLI):
 
 ```shell
 export OPENAI_MODEL="gpt-4"
+```
+
+You can also set a custom system prompt. LLM-CLI defaults to a reasonable
+prompt for chatting with the model, but you can set your own prompt (this
+can also set via the `--system` / `-s` flag in the CLI):
+
+```shell
+export OPENAI_SYSTEM_MESSAGE="You are a helpful assistant who talks like a pirate."
 ```
 
 <details>
