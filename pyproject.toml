@@ -8,10 +8,11 @@ dynamic = ["version"]
 dependencies = [
     "openai",
     "rich",
+    "click",
 ]
 
 [tool.hatch.version]
 path = "llmcli.py"
 
 [project.scripts]
-llm-cli = "llmcli:main"
+llm-cli = "llmcli:cli"
