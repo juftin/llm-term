@@ -1,0 +1,17 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "llm-cli"
+dynamic = ["version"]
+dependencies = [
+    "openai",
+    "rich",
+]
+
+[tool.hatch.version]
+path = "llmcli.py"
+
+[project.scripts]
+llm-cli = "llmcli:main"
