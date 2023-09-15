@@ -3,22 +3,27 @@ LLM CLI
 """
 
 from datetime import datetime, timezone
+from pathlib import Path
 from textwrap import dedent
-from typing import Optional, TypedDict
+from typing import Any, Dict, Generator, Optional, TypedDict
 
 import click
 import openai
 import rich.traceback
+from prompt_toolkit import PromptSession
+from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
+from prompt_toolkit.history import FileHistory
+from rich.columns import Columns
 from rich.console import Console
 from rich.live import Live
 from rich.markdown import Markdown
 from rich.panel import Panel
-from rich.prompt import Prompt
+from rich.spinner import Spinner
 
 rich.traceback.install(show_locals=True)
 
 __application__ = "llm-cli"
-__version__ = "0.2.0"
+__version__ = "0.3.0"
 
 
 class Message(TypedDict):
@@ -76,32 +81,72 @@ def setup_system_message(model: str, message: Optional[str] = None) -> Message:
     return Message(role="system", content=system_message)
 
 
-def chat_session(console: Console, system_message: Message, model: str) -> None:
+def chat_session(
+    console: Console, system_message: Message, model: str, stream: bool
+) -> None:
     """
     Chat session with ChatGPT
     """
+    history = Path().home() / ".llm-cli-history.txt"
+    session = PromptSession(history=FileHistory(str(history)))
     messages = [system_message]
     while True:
-        text = Prompt.ask("🧑", console=console)
+        text = session.prompt("🧑: ", auto_suggest=AutoSuggestFromHistory())
         console.print("")
         if not text:
             continue
         messages.append(Message(role="user", content=text))
-        streamed_message = stream_response(
-            console=console, messages=messages, model=model
+        streamed_message = print_response(
+            console=console,
+            messages=messages,
+            model=model,
+            stream=stream,
         )
         messages.append(streamed_message)
         console.print("")
 
 
-def stream_response(console: Console, messages: list[Message], model: str) -> Message:
+def print_response(
+    console: Console, messages: list[Message], model: str, stream: bool
+) -> Message:
     """
     Stream the response
     """
-    response = openai.ChatCompletion.create(model=model, messages=messages, stream=True)
+    if stream is False:
+        with Live(
+            Spinner("aesthetic"), refresh_per_second=15, console=console, transient=True
+        ):
+            response = openai.ChatCompletion.create(
+                model=model, messages=messages, stream=False
+            )
+            complete_response = response["choices"][0]["message"]["content"]
+            console.print(
+                Panel(Markdown(complete_response), title="🤖", title_align="left")
+            )
+        message = Message(role="assistant", content=complete_response)
+    else:
+        response = openai.ChatCompletion.create(
+            model=model, messages=messages, stream=True
+        )
+        message = render_streamed_response(response=response, console=console)
+    return message
+
+
+def render_streamed_response(
+    response: Generator[Dict[str, Any], None, None], console: Console
+) -> Message:
+    """
+    Render the streamed response and a spinner
+    """
     complete_message = ""
+    rich_response = Columns(
+        [
+            Panel(Markdown(complete_message), title="🤖", title_align="left"),
+            Spinner("aesthetic"),
+        ]
+    )
     with Live(
-        Panel(Markdown(complete_message), title="🤖", title_align="left"),
+        rich_response,
         refresh_per_second=15,
         console=console,
     ) as live:
@@ -110,9 +155,14 @@ def stream_response(console: Console, messages: list[Message], model: str) -> Me
                 break
             chunk_text = chunk["choices"][0]["delta"].get("content", "")
             complete_message += chunk_text
-            live.update(
-                Panel(Markdown(complete_message), title="🤖", title_align="left")
+            updated_response = Columns(
+                [
+                    Panel(Markdown(complete_message), title="🤖", title_align="left"),
+                    Spinner("aesthetic"),
+                ]
             )
+            live.update(updated_response)
+        live.update(Panel(Markdown(complete_message), title="🤖", title_align="left"))
     return Message(role="assistant", content=complete_message)
 
 
@@ -125,7 +175,7 @@ def stream_response(console: Console, messages: list[Message], model: str) -> Me
     envvar="OPENAI_MODEL",
     show_envvar=True,
     default="gpt-3.5-turbo",
-    type=str,
+    type=click.STRING,
 )
 @click.option(
     "--system",
@@ -134,7 +184,7 @@ def stream_response(console: Console, messages: list[Message], model: str) -> Me
     envvar="OPENAI_SYSTEM_MESSAGE",
     show_envvar=True,
     default=None,
-    type=str,
+    type=click.STRING,
 )
 @click.option(
     "--api-key",
@@ -142,18 +192,37 @@ def stream_response(console: Console, messages: list[Message], model: str) -> Me
     help="The OpenAI API key",
     envvar="OPENAI_API_KEY",
     show_envvar=True,
-    type=str,
+    type=click.STRING,
 )
-def cli(model: str, system: Optional[str], api_key: str) -> None:
+@click.option(
+    "--stream/--no-stream",
+    help="Stream the response",
+    envvar="OPENAI_STREAM",
+    show_envvar=True,
+    default=True,
+    type=click.BOOL,
+)
+@click.option(
+    "--console",
+    "-c",
+    help="The console width to use - defaults to auto-detect",
+    type=click.INT,
+    default=None,
+)
+def cli(
+    model: str, system: Optional[str], api_key: str, stream: bool, console: int
+) -> None:
     """
     The LLM-CLI is a command line interface for OpenAI's Chat API.
     """
-    console = Console()
+    console = Console(width=console)
     try:
         print_header(console=console, model=model)
         check_credentials(api_key=api_key)
         system_message = setup_system_message(model=model, message=system)
-        chat_session(console=console, system_message=system_message, model=model)
+        chat_session(
+            console=console, system_message=system_message, model=model, stream=stream
+        )
     except KeyboardInterrupt:
         exit(0)
 

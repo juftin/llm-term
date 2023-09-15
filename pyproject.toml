@@ -9,6 +9,7 @@ dependencies = [
     "openai",
     "rich",
     "click",
+    "prompt-toolkit",
 ]
 
 [tool.hatch.version]
