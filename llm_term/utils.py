@@ -78,6 +78,7 @@ def chat_session(
     stream: bool,
     panel: bool,
     chat_message: str,
+    avatar: str,
 ) -> None:
     """
     Chat session with ChatGPT
@@ -91,16 +92,16 @@ def chat_session(
     message_counter = 0
     while True:
         if message_counter == 0 and len(messages) == 2:  # noqa: PLR2004
-            console.print(f"🧑: {chat_message}")
+            console.print(f"{avatar}: {chat_message}")
             history.append_string(chat_message)
             if panel is False:
                 console.print("")
                 console.rule()
         else:
-            text = session.prompt("🧑: ", auto_suggest=AutoSuggestFromHistory())
+            text = session.prompt(f"{avatar}: ", auto_suggest=AutoSuggestFromHistory())
             if not text:
                 continue
-            console.print(f"🧑: {text}")
+            console.print(f"{avatar}: {text}")
             if panel is False:
                 console.print("")
                 console.rule()

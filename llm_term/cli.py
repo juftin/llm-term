@@ -29,6 +29,7 @@ rich.traceback.install(show_locals=True)
     show_envvar=True,
     default="gpt-3.5-turbo",
     type=click.STRING,
+    show_default=True,
 )
 @click.argument(
     "chat",
@@ -74,6 +75,14 @@ rich.traceback.install(show_locals=True)
     default=True,
     type=click.BOOL,
 )
+@click.option(
+    "--avatar",
+    "-a",
+    help="The avatar to use",
+    type=click.STRING,
+    default="🤓",
+    show_default=True,
+)
 def cli(
     model: str,
     chat: Tuple[str, ...],
@@ -82,6 +91,7 @@ def cli(
     stream: bool,
     console: int,
     border: bool,
+    avatar: str,
 ) -> None:
     """
     llm-term is a command line interface for OpenAI's Chat API.
@@ -99,6 +109,7 @@ def cli(
             stream=stream,
             panel=border,
             chat_message=chat_message,
+            avatar=avatar,
         )
     except KeyboardInterrupt as ki:
         raise click.exceptions.Exit(code=0) from ki

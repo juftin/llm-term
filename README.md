@@ -3,7 +3,7 @@
 Chat with OpenAI's GPT models directly from the command line.
 
 <p align="center">
-<img width="600" alt="image" src="https://github.com/juftin/llm-term/assets/49741340/27b6c483-8a8a-4876-bc88-bd05a5fae10a">
+<img width="600" alt="image" src="https://github.com/juftin/llm-term/assets/49741340/ca75486f-a3a9-41fb-8b25-d939cbfdfd22">
 </p>
 
 [![PyPI](https://img.shields.io/pypi/v/llm-term?color=blue&label=🤖%20llm-term)](https://github.com/juftin/llm-term)
@@ -61,6 +61,6 @@ export OPENAI_SYSTEM_MESSAGE="You are a helpful assistant who talks like a pirat
 <details>
 <summary>Screen Recording</summary>
 
-https://user-images.githubusercontent.com/49741340/270867882-4c3f1054-a811-496a-90d5-8ce79882827f.mov
+https://user-images.githubusercontent.com/49741340/270871763-d872650e-bceb-4da3-8bc6-3e079d55e5a3.mov
 
 </details>
