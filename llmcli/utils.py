@@ -82,9 +82,10 @@ def chat_session(
     """
     Chat session with ChatGPT
     """
-    history = Path().home() / ".llm-cli-history.txt"
+    history_file = Path().home() / ".llm-cli-history.txt"
+    history = FileHistory(str(history_file))
     session: PromptSession = PromptSession(
-        history=FileHistory(str(history)), erase_when_done=True
+        history=history, erase_when_done=True
     )
     messages: List[Message] = [system_message]
     if chat_message.strip() != "":
@@ -92,7 +93,8 @@ def chat_session(
     message_counter = 0
     while True:
         if message_counter == 0 and len(messages) == 2:  # noqa: PLR2004
-            console.print(f"🧑: {messages[1]['content']}")
+            console.print(f"🧑: {chat_message}")
+            history.append_string(chat_message)
             if panel is False:
                 console.print("")
                 console.rule()
