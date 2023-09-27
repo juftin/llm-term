@@ -3,8 +3,16 @@
 Chat with OpenAI's GPT models directly from the command line.
 
 <p align="center">
-<img width="600" alt="image" src="https://github.com/juftin/llm-cli/assets/49741340/77dd0f74-6beb-4286-bba3-359b46ac0dd0">
+<img width="600" alt="image" src="https://github.com/juftin/llm-term/assets/49741340/27b6c483-8a8a-4876-bc88-bd05a5fae10a">
 </p>
+
+[![PyPI](https://img.shields.io/pypi/v/llm-term?color=blue&label=🤖llm-term)](https://github.com/juftin/llm-term)
+[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/llm-term)](https://pypi.python.org/pypi/llm-term/)
+[![GitHub License](https://img.shields.io/github/license/juftin/llm-term?color=blue&label=License)](https://github.com/juftin/llm-term/blob/main/LICENSE)
+[![Black Codestyle](https://img.shields.io/badge/code%20style-black-000000.svg)]()
+[![pre-commit](https://img.shields.io/badge/pre--commit-enabled-lightgreen?logo=pre-commit)](https://github.com/pre-commit/pre-commit)
+[![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
+[![Gitmoji](https://img.shields.io/badge/gitmoji-%20😜%20😍-FFDD67.svg)](https://gitmoji.dev)
 
 ## Installation
 
@@ -53,6 +61,6 @@ export OPENAI_SYSTEM_MESSAGE="You are a helpful assistant who talks like a pirat
 <details>
 <summary>Screen Recording</summary>
 
-https://user-images.githubusercontent.com/49741340/267864605-5c29a31b-4ea9-477b-aa91-a3c06e9f0477.mov
+https://user-images.githubusercontent.com/49741340/270867882-4c3f1054-a811-496a-90d5-8ce79882827f.mov
 
 </details>

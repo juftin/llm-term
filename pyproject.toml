@@ -32,9 +32,9 @@ requires-python = ">=3.8,<4"
 llm-term = "llm_term.cli:cli"
 
 [project.urls]
-Changelog = "https://github.com/juftin/llm-cli/releases"
-Issues = "https://github.com/juftin/llm-cli/issues"
-Source = "https://github.com/juftin/llm-cli"
+Changelog = "https://github.com/juftin/llm-term/releases"
+Issues = "https://github.com/juftin/llm-term/issues"
+Source = "https://github.com/juftin/llm-term"
 
 [tool.hatch.envs.default]
 dependencies = [
