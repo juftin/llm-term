@@ -3,17 +3,38 @@ build-backend = "hatchling.build"
 requires = ["hatchling"]
 
 [project]
+authors = [{name = "Justin Flannery", email = "justin.flannery@juftin.com"}]
+classifiers = [
+  "License :: OSI Approved :: MIT License",
+  "Development Status :: 5 - Production/Stable",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11"
+]
 dependencies = [
   "openai",
   "rich",
   "click",
   "prompt-toolkit"
 ]
+description = "A simple CLI to chat with OpenAI GPT Models"
 dynamic = ["version"]
+keywords = ["openai", "rich", "cli", "python", "chatgpt"]
+license = "MIT"
 name = "llm-cli"
+readme = "README.md"
+requires-python = ">=3.8,<4"
 
 [project.scripts]
 llm-cli = "llmcli.cli:cli"
+
+[project.urls]
+Changelog = "https://github.com/juftin/lunchable/releases"
+Issues = "https://github.com/juftin/lunchable/issues"
+Source = "https://github.com/juftin/lunchable"
 
 [tool.hatch.envs.default]
 dependencies = [
@@ -34,6 +55,10 @@ fmt = [
 ]
 precommit = [
   "pre-commit run --all-files"
+]
+semantic-release = [
+  "npm install --prefix .github/semantic_release/",
+  "npx --prefix .github/semantic_release/ semantic-release {args:}"
 ]
 style = [
   "ruff {args:.}",

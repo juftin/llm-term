@@ -84,9 +84,7 @@ def chat_session(
     """
     history_file = Path().home() / ".llm-cli-history.txt"
     history = FileHistory(str(history_file))
-    session: PromptSession = PromptSession(
-        history=history, erase_when_done=True
-    )
+    session: PromptSession = PromptSession(history=history, erase_when_done=True)
     messages: List[Message] = [system_message]
     if chat_message.strip() != "":
         messages.append(Message(role="user", content=chat_message))

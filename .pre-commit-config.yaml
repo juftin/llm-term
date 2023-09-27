@@ -26,6 +26,7 @@ repos:
       hooks:
           - id: prettier
             args: [--print-width=88, --tab-width=4]
+            exclude: .github/semantic_release/release_notes.hbs
 
     - repo: local
       hooks:
