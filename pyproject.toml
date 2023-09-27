@@ -1,19 +1,82 @@
 [build-system]
-requires = ["hatchling"]
 build-backend = "hatchling.build"
+requires = ["hatchling"]
 
 [project]
-name = "llm-cli"
-dynamic = ["version"]
 dependencies = [
-    "openai",
-    "rich",
-    "click",
-    "prompt-toolkit",
+  "openai",
+  "rich",
+  "click",
+  "prompt-toolkit"
 ]
-
-[tool.hatch.version]
-path = "llmcli.py"
+dynamic = ["version"]
+name = "llm-cli"
 
 [project.scripts]
-llm-cli = "llmcli:cli"
+llm-cli = "llmcli.cli:cli"
+
+[tool.hatch.envs.default]
+dependencies = [
+  "mypy~=1.4.1",
+  "ruff~=0.0.281"
+]
+path = ".venv"
+
+[tool.hatch.envs.default.scripts]
+all = [
+  "fmt",
+  "typing"
+]
+fmt = [
+  "black {args:.}",
+  "ruff --fix {args:.}",
+  "style"
+]
+precommit = [
+  "pre-commit run --all-files"
+]
+style = [
+  "ruff {args:.}",
+  "black --check --diff {args:.}"
+]
+typing = "mypy --install-types --non-interactive {args:llmcli}"
+
+[tool.hatch.version]
+path = "llmcli/about.py"
+
+[tool.ruff]
+ignore = [
+  # Boolean-typed positional argument in function definition
+  "FBT001",
+  # Ignore complexity
+  "PLR0913"
+]
+line-length = 100
+select = [
+  "A",
+  "ARG",
+  "B",
+  "C",
+  "DTZ",
+  "E",
+  "EM",
+  "F",
+  "FBT",
+  "I",
+  "ICN",
+  "ISC",
+  "N",
+  "PLC",
+  "PLE",
+  "PLR",
+  "PLW",
+  "Q",
+  "RUF",
+  "S",
+  "T",
+  "TID",
+  "UP",
+  "W",
+  "YTT"
+]
+target-version = "py38"
