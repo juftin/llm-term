@@ -5,7 +5,7 @@ Helper functions for the CLI
 from datetime import datetime, timezone
 from pathlib import Path
 from textwrap import dedent
-from typing import Any, Dict, Generator, Optional
+from typing import Any, Dict, Generator, List, Optional
 
 import click
 import openai
@@ -72,23 +72,39 @@ def setup_system_message(model: str, message: Optional[str] = None) -> Message:
 
 
 def chat_session(
-    console: Console, system_message: Message, model: str, stream: bool, panel: bool
+    console: Console,
+    system_message: Message,
+    model: str,
+    stream: bool,
+    panel: bool,
+    chat_message: str,
 ) -> None:
     """
     Chat session with ChatGPT
     """
     history = Path().home() / ".llm-cli-history.txt"
-    session: PromptSession = PromptSession(history=FileHistory(str(history)))
-    messages = [system_message]
+    session: PromptSession = PromptSession(
+        history=FileHistory(str(history)), erase_when_done=True
+    )
+    messages: List[Message] = [system_message]
+    if chat_message.strip() != "":
+        messages.append(Message(role="user", content=chat_message))
+    message_counter = 0
     while True:
-        text = session.prompt("🧑: ", auto_suggest=AutoSuggestFromHistory())
-        if panel is False:
+        if message_counter == 0 and len(messages) == 2:  # noqa: PLR2004
+            console.print(f"🧑: {messages[1]['content']}")
             console.print("")
             console.rule()
+        else:
+            text = session.prompt("🧑: ", auto_suggest=AutoSuggestFromHistory())
+            if not text:
+                continue
+            console.print(f"🧑: {text}")
+            if panel is False:
+                console.print("")
+                console.rule()
+            messages.append(Message(role="user", content=text))
         console.print("")
-        if not text:
-            continue
-        messages.append(Message(role="user", content=text))
         streamed_message = print_response(
             console=console,
             messages=messages,
@@ -101,6 +117,7 @@ def chat_session(
             console.rule()
         messages.append(streamed_message)
         console.print("")
+        message_counter += 1
 
 
 def print_response(

@@ -2,7 +2,7 @@
 LLM CLI
 """
 
-from typing import Optional
+from typing import Optional, Tuple
 
 import click
 import rich.traceback
@@ -29,6 +29,12 @@ rich.traceback.install(show_locals=True)
     show_envvar=True,
     default="gpt-3.5-turbo",
     type=click.STRING,
+)
+@click.argument(
+    "chat",
+    nargs=-1,
+    type=click.STRING,
+    default=None,
 )
 @click.option(
     "--system",
@@ -70,6 +76,7 @@ rich.traceback.install(show_locals=True)
 )
 def cli(
     model: str,
+    chat: Tuple[str, ...],
     system: Optional[str],
     api_key: str,
     stream: bool,
@@ -80,6 +87,7 @@ def cli(
     The LLM-CLI is a command line interface for OpenAI's Chat API.
     """
     rich_console: Console = Console(width=console)
+    chat_message = " ".join(chat)
     try:
         print_header(console=rich_console, model=model)
         check_credentials(api_key=api_key)
@@ -90,6 +98,7 @@ def cli(
             model=model,
             stream=stream,
             panel=border,
+            chat_message=chat_message,
         )
     except KeyboardInterrupt as ki:
         raise click.exceptions.Exit(code=0) from ki

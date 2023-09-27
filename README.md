@@ -35,6 +35,13 @@ to `gpt-3.5-turbo` (this can also set via the
 export OPENAI_MODEL="gpt-4"
 ```
 
+Want to start the conversion directly from the command line? No problem,
+just pass your prompt to `llm-cli`:
+
+```shell
+llm-cli show me python code to detect a palindrome
+```
+
 You can also set a custom system prompt. LLM-CLI defaults to a reasonable
 prompt for chatting with the model, but you can set your own prompt (this
 can also set via the `--system` / `-s` flag in the CLI):
