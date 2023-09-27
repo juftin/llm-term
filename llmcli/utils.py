@@ -93,8 +93,9 @@ def chat_session(
     while True:
         if message_counter == 0 and len(messages) == 2:  # noqa: PLR2004
             console.print(f"🧑: {messages[1]['content']}")
-            console.print("")
-            console.rule()
+            if panel is False:
+                console.print("")
+                console.rule()
         else:
             text = session.prompt("🧑: ", auto_suggest=AutoSuggestFromHistory())
             if not text:
