@@ -3,7 +3,7 @@
 Chat with OpenAI's GPT models directly from the command line.
 
 <p align="center">
-<img width="600" alt="image" src="https://github.com/juftin/llm-term/assets/49741340/ca75486f-a3a9-41fb-8b25-d939cbfdfd22">
+<img width="600" alt="image" src="https://github.com/juftin/llm-term/assets/49741340/4233a9a7-dd24-44c3-b67d-5d13b80c1f89">
 </p>
 
 [![PyPI](https://img.shields.io/pypi/v/llm-term?color=blue&label=🤖%20llm-term)](https://github.com/juftin/llm-term)
