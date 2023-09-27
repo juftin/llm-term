@@ -38,6 +38,8 @@ multidict==6.0.4
     #   yarl
 openai==0.28.0
     # via llm-cli (pyproject.toml)
+prompt-toolkit==3.0.39
+    # via llm-cli (pyproject.toml)
 pygments==2.16.1
     # via rich
 requests==2.31.0
@@ -48,5 +50,7 @@ tqdm==4.66.1
     # via openai
 urllib3==2.0.4
     # via requests
+wcwidth==0.2.6
+    # via prompt-toolkit
 yarl==1.9.2
     # via aiohttp
