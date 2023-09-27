@@ -39,7 +39,9 @@ Source = "https://github.com/juftin/lunchable"
 [tool.hatch.envs.default]
 dependencies = [
   "mypy~=1.4.1",
-  "ruff~=0.0.281"
+  "ruff~=0.0.281",
+  "black~=23.9.1",
+  "pip-tools~=7.3.0"
 ]
 path = ".venv"
 
