@@ -19,8 +19,8 @@ from rich.markdown import Markdown
 from rich.panel import Panel
 from rich.spinner import Spinner
 
-from llmcli.about import __application__, __version__
-from llmcli.base import Message, NoPadding
+from llm_term.about import __application__, __version__
+from llm_term.base import Message, NoPadding
 
 
 def print_header(console: Console, model: str) -> None:
@@ -82,7 +82,7 @@ def chat_session(
     """
     Chat session with ChatGPT
     """
-    history_file = Path().home() / ".llm-cli-history.txt"
+    history_file = Path().home() / ".llm-term-history.txt"
     history = FileHistory(str(history_file))
     session: PromptSession = PromptSession(history=history, erase_when_done=True)
     messages: List[Message] = [system_message]

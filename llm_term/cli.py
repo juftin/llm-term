@@ -8,8 +8,8 @@ import click
 import rich.traceback
 from rich.console import Console
 
-from llmcli.about import __application__, __version__
-from llmcli.utils import (
+from llm_term.about import __application__, __version__
+from llm_term.utils import (
     chat_session,
     check_credentials,
     print_header,
@@ -84,7 +84,7 @@ def cli(
     border: bool,
 ) -> None:
     """
-    The LLM-CLI is a command line interface for OpenAI's Chat API.
+    llm-term is a command line interface for OpenAI's Chat API.
     """
     rich_console: Console = Console(width=console)
     chat_message = " ".join(chat)

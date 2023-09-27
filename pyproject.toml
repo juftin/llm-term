@@ -24,17 +24,17 @@ description = "A simple CLI to chat with OpenAI GPT Models"
 dynamic = ["version"]
 keywords = ["openai", "rich", "cli", "python", "chatgpt"]
 license = "MIT"
-name = "llm-cli"
+name = "llm-term"
 readme = "README.md"
 requires-python = ">=3.8,<4"
 
 [project.scripts]
-llm-cli = "llmcli.cli:cli"
+llm-term = "llm_term.cli:cli"
 
 [project.urls]
-Changelog = "https://github.com/juftin/lunchable/releases"
-Issues = "https://github.com/juftin/lunchable/issues"
-Source = "https://github.com/juftin/lunchable"
+Changelog = "https://github.com/juftin/llm-cli/releases"
+Issues = "https://github.com/juftin/llm-cli/issues"
+Source = "https://github.com/juftin/llm-cli"
 
 [tool.hatch.envs.default]
 dependencies = [
@@ -66,10 +66,10 @@ style = [
   "ruff {args:.}",
   "black --check --diff {args:.}"
 ]
-typing = "mypy --install-types --non-interactive {args:llmcli}"
+typing = "mypy --install-types --non-interactive {args:llm_term}"
 
 [tool.hatch.version]
-path = "llmcli/about.py"
+path = "llm_term/about.py"
 
 [tool.ruff]
 ignore = [

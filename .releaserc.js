@@ -39,9 +39,9 @@ module.exports = {
         [
             "@semantic-release/git",
             {
-                assets: ["pyproject.toml", "*/_version.py"],
+                assets: ["pyproject.toml", "*/about.py"],
                 message:
-                    "🔖 llm-cli ${nextRelease.version}\n\n${nextRelease.notes}\n[skip ci]",
+                    "🔖 llm-term ${nextRelease.version}\n\n${nextRelease.notes}\n[skip ci]",
             },
         ],
         [

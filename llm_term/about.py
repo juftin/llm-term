@@ -2,5 +2,5 @@
 Package Info
 """
 
-__application__ = "llm-cli"
+__application__ = "llm-term"
 __version__ = "0.5.2"

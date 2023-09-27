@@ -1,5 +1,5 @@
 """
-Base classes and types for llmcli
+Base classes and types for llm_term
 """
 
 from typing import Any, TypedDict

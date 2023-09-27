@@ -19,7 +19,7 @@ charset-normalizer==3.2.0
     #   aiohttp
     #   requests
 click==8.1.7
-    # via llm-cli (pyproject.toml)
+    # via llm-term (pyproject.toml)
 frozenlist==1.4.0
     # via
     #   aiohttp
@@ -37,15 +37,15 @@ multidict==6.0.4
     #   aiohttp
     #   yarl
 openai==0.28.0
-    # via llm-cli (pyproject.toml)
+    # via llm-term (pyproject.toml)
 prompt-toolkit==3.0.39
-    # via llm-cli (pyproject.toml)
+    # via llm-term (pyproject.toml)
 pygments==2.16.1
     # via rich
 requests==2.31.0
     # via openai
 rich==13.5.2
-    # via llm-cli (pyproject.toml)
+    # via llm-term (pyproject.toml)
 tqdm==4.66.1
     # via openai
 urllib3==2.0.4

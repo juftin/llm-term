@@ -1,4 +1,4 @@
-# LLM-CLI
+# llm-term
 
 Chat with OpenAI's GPT models directly from the command line.
 
@@ -9,7 +9,7 @@ Chat with OpenAI's GPT models directly from the command line.
 ## Installation
 
 ```bash
-pipx install git+https://github.com/juftin/llm-cli
+pipx install llm-term
 ```
 
 ## Usage
@@ -17,7 +17,7 @@ pipx install git+https://github.com/juftin/llm-cli
 Then, you can chat with the model directly from the command line:
 
 ```shell
-llm-cli
+llm-term
 ```
 
 Make sure you have an OpenAI API key set as an environment variable
@@ -27,7 +27,7 @@ Make sure you have an OpenAI API key set as an environment variable
 export OPENAI_API_KEY="xxxxxxxxxxxxxx"
 ```
 
-Optionally, you can set a custom model. LLM-CLI defaults
+Optionally, you can set a custom model. llm-term defaults
 to `gpt-3.5-turbo` (this can also set via the
 `--model` / `-m` flag in the CLI):
 
@@ -36,13 +36,13 @@ export OPENAI_MODEL="gpt-4"
 ```
 
 Want to start the conversion directly from the command line? No problem,
-just pass your prompt to `llm-cli`:
+just pass your prompt to `llm-term`:
 
 ```shell
-llm-cli show me python code to detect a palindrome
+llm-term show me python code to detect a palindrome
 ```
 
-You can also set a custom system prompt. LLM-CLI defaults to a reasonable
+You can also set a custom system prompt. llm-term defaults to a reasonable
 prompt for chatting with the model, but you can set your own prompt (this
 can also set via the `--system` / `-s` flag in the CLI):
 
