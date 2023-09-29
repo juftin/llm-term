@@ -16,10 +16,9 @@ Chat with OpenAI's GPT models directly from the command line.
 
 <details>
 <summary>Screen Recording</summary>
-<video controls>
-  <source src="https://user-images.githubusercontent.com/49741340/270871763-d872650e-bceb-4da3-8bc6-3e079d55e5a3.mov" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
+
+https://user-images.githubusercontent.com/49741340/270871763-d872650e-bceb-4da3-8bc6-3e079d55e5a3.mov
+
 </details>
 
 <h2><a href="https://juftin.com/llm-term">Check Out the Docs</a></h2>
