@@ -1,8 +1,8 @@
 """
-__main__.py module hook
+Command-line interface
 """
 
-from llm_term.cli import cli
+from llm_term.cli import cli as main  # pragma: no cover
 
 if __name__ == "__main__":
-    cli()
+    main()

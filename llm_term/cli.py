@@ -8,7 +8,7 @@ import click
 import rich.traceback
 from rich.console import Console
 
-from llm_term.about import __application__, __version__
+from llm_term.__about__ import __application__, __version__
 from llm_term.utils import (
     chat_session,
     check_credentials,

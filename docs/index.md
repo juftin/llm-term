@@ -22,8 +22,6 @@ Chat with OpenAI's GPT models directly from the command line.
 </video>
 </details>
 
-<a href="https://juftin.com/llm-term" style="font-size: 24px; font-weight: bold;">Check Out the Docs</a>
-
 ## Installation
 
 ```bash

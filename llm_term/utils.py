@@ -19,7 +19,7 @@ from rich.markdown import Markdown
 from rich.panel import Panel
 from rich.spinner import Spinner
 
-from llm_term.about import __application__, __version__
+from llm_term.__about__ import __application__, __version__
 from llm_term.base import Message, NoPadding
 
 
@@ -130,24 +130,14 @@ def print_response(
     """
     panel_class = Panel if panel is True else NoPadding
     if stream is False:
-        with Live(
-            Spinner("aesthetic"), refresh_per_second=15, console=console, transient=True
-        ):
-            response = openai.ChatCompletion.create(
-                model=model, messages=messages, stream=False
-            )
+        with Live(Spinner("aesthetic"), refresh_per_second=15, console=console, transient=True):
+            response = openai.ChatCompletion.create(model=model, messages=messages, stream=False)
             complete_response = response["choices"][0]["message"]["content"]
-            console.print(
-                panel_class(Markdown(complete_response), title="🤖", title_align="left")
-            )
+            console.print(panel_class(Markdown(complete_response), title="🤖", title_align="left"))
         message = Message(role="assistant", content=complete_response)
     else:
-        response = openai.ChatCompletion.create(
-            model=model, messages=messages, stream=True
-        )
-        message = render_streamed_response(
-            response=response, console=console, panel=panel
-        )
+        response = openai.ChatCompletion.create(model=model, messages=messages, stream=True)
+        message = render_streamed_response(response=response, console=console, panel=panel)
     return message
 
 
@@ -177,14 +167,10 @@ def render_streamed_response(
             complete_message += chunk_text
             updated_response = Columns(
                 [
-                    panel_class(
-                        Markdown(complete_message), title="🤖", title_align="left"
-                    ),
+                    panel_class(Markdown(complete_message), title="🤖", title_align="left"),
                     Spinner("aesthetic"),
                 ]
             )
             live.update(updated_response)
-        live.update(
-            panel_class(Markdown(complete_message), title="🤖", title_align="left")
-        )
+        live.update(panel_class(Markdown(complete_message), title="🤖", title_align="left"))
     return Message(role="assistant", content=complete_message)

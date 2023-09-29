@@ -3,22 +3,25 @@ build-backend = "hatchling.build"
 requires = ["hatchling"]
 
 [project]
-authors = [{name = "Justin Flannery", email = "justin.flannery@juftin.com"}]
+authors = [
+  {name = "Justin Flannery", email = "juftin@juftin.com"}
+]
 classifiers = [
-  "License :: OSI Approved :: MIT License",
   "Development Status :: 5 - Production/Stable",
   "Operating System :: OS Independent",
-  "Programming Language :: Python :: 3",
+  "Programming Language :: Python",
   "Programming Language :: Python :: 3.8",
   "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: 3.10",
-  "Programming Language :: Python :: 3.11"
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: Implementation :: CPython",
+  "Programming Language :: Python :: Implementation :: PyPy"
 ]
 dependencies = [
-  "openai",
-  "rich",
-  "click",
-  "prompt-toolkit"
+  "click~=8.1.7",
+  "openai~=0.28.1",
+  "rich~=13.5.3",
+  "prompt-toolkit~=3.0.39"
 ]
 description = "A simple CLI to chat with OpenAI GPT Models"
 dynamic = ["version"]
@@ -33,21 +36,102 @@ llm-term = "llm_term.cli:cli"
 
 [project.urls]
 Changelog = "https://github.com/juftin/llm-term/releases"
-Issues = "https://github.com/juftin/llm-term/issues"
+Documentation = "https://juftin.github.io/llm-term"
+Issues = "https://juftin.github.io/llm-term/issues"
 Source = "https://github.com/juftin/llm-term"
+
+[tool.black]
+line-length = 100
+skip-string-normalization = true
+target-version = ["py38"]
+
+[tool.coverage.paths]
+llm_term = ["llm_term", "*/llm-term/llm_term"]
+tests = ["tests", "*/llm-term/tests"]
+
+[tool.coverage.report]
+exclude_lines = [
+  "no cov",
+  "if __name__ == .__main__.:",
+  "if TYPE_CHECKING:"
+]
+
+[tool.coverage.run]
+branch = true
+omit = [
+  "llm_term/__about__.py"
+]
+parallel = true
+source_pkgs = ["llm_term", "tests"]
+
+[[tool.hatch.envs.all.matrix]]
+python = ["3.8", "3.9", "3.10", "3.11"]
 
 [tool.hatch.envs.default]
 dependencies = [
-  "mypy~=1.4.1",
-  "ruff~=0.0.281",
-  "black~=23.9.1",
-  "pip-tools~=7.3.0"
+  "coverage[toml]>=6.5",
+  "pytest"
 ]
 path = ".venv"
+post-install-commands = [
+  "pre-commit install"
+]
+pre-install-commands = [
+  "pip install -q -r requirements.txt --no-deps"
+]
+type = "virtual"
 
 [tool.hatch.envs.default.scripts]
+cov = [
+  "test-cov",
+  "cov-report"
+]
+cov-report = [
+  "- coverage combine",
+  "coverage report -m"
+]
+test = "pytest {args:tests}"
+test-cov = "coverage run -m pytest {args:tests}"
+
+[tool.hatch.envs.docs]
+dependencies = [
+  "mkdocs~=1.5.2",
+  "mkdocs-material~=9.2.3",
+  "mkdocstrings~=0.22.0",
+  "markdown-exec[ansi]~=1.6.0",
+  "mkdocs-click~=0.8.1"
+]
+
+[tool.hatch.envs.docs.scripts]
+build = ["mkdocs build --clean --strict"]
+deploy = ["mkdocs gh-deploy {args:}"]
+serve = ["mkdocs serve --dev-addr localhost:8080 --livereload"]
+
+[tool.hatch.envs.gen]
+dependencies = [
+  "pip-tools~=7.1.0"
+]
+detached = false
+
+[tool.hatch.envs.gen.scripts]
+release = [
+  "npm install --prefix .github/semantic_release/",
+  "npx --prefix .github/semantic_release/ semantic-release {args:}"
+]
+reqs = "pip-compile {args:} --generate-hashes --output-file requirements.txt"
+reqs-update = "pip-compile {args:} --upgrade --generate-hashes --output-file requirements.txt"
+
+[tool.hatch.envs.lint]
+dependencies = [
+  "black>=23.1.0",
+  "mypy>=1.0.0",
+  "ruff>=0.0.243"
+]
+detached = true
+
+[tool.hatch.envs.lint.scripts]
 all = [
-  "fmt",
+  "style",
   "typing"
 ]
 fmt = [
@@ -58,25 +142,42 @@ fmt = [
 precommit = [
   "pre-commit run --all-files"
 ]
-semantic-release = [
-  "npm install --prefix .github/semantic_release/",
-  "npx --prefix .github/semantic_release/ semantic-release {args:}"
-]
 style = [
   "ruff {args:.}",
   "black --check --diff {args:.}"
 ]
-typing = "mypy --install-types --non-interactive {args:llm_term}"
+typing = "mypy --install-types --non-interactive {args:llm_term tests}"
 
 [tool.hatch.version]
-path = "llm_term/about.py"
+path = "llm_term/__about__.py"
+
+[[tool.mypy.overrides]]
+ignore_missing_imports = true
+module = [
+  "pytest.*",
+  "rich.*",
+  "openai.*",
+  "prompt_toolkit.*"
+]
 
 [tool.ruff]
 ignore = [
+  # Allow non-abstract empty methods in abstract base classes
+  "B027",
   # Boolean-typed positional argument in function definition
   "FBT001",
+  # Allow boolean positional values in function calls, like `dict.get(... True)`
+  "FBT003",
+  # Ignore checks for possible passwords
+  "S105",
+  "S106",
+  "S107",
   # Ignore complexity
-  "PLR0913"
+  "C901",
+  "PLR0911",
+  "PLR0912",
+  "PLR0913",
+  "PLR0915"
 ]
 line-length = 100
 select = [
@@ -107,3 +208,20 @@ select = [
   "YTT"
 ]
 target-version = "py38"
+unfixable = [
+  # Don't touch unused imports
+  "F401"
+]
+
+[tool.ruff.flake8-tidy-imports]
+ban-relative-imports = "all"
+
+[tool.ruff.isort]
+known-first-party = ["llm_term"]
+
+[tool.ruff.per-file-ignores]
+# Tests can use magic values, assertions, and relative imports
+"tests/**/*" = ["PLR2004", "S101", "TID252"]
+
+[tool.ruff.pydocstyle]
+convention = "numpy"
