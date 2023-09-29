@@ -2,13 +2,13 @@
 LLM CLI
 """
 
-from typing import Optional, Tuple
+from __future__ import annotations
 
 import click
 import rich.traceback
 from rich.console import Console
 
-from llm_term.about import __application__, __version__
+from llm_term.__about__ import __application__, __version__
 from llm_term.utils import (
     chat_session,
     check_credentials,
@@ -85,8 +85,8 @@ rich.traceback.install(show_locals=True)
 )
 def cli(
     model: str,
-    chat: Tuple[str, ...],
-    system: Optional[str],
+    chat: tuple[str, ...],
+    system: str | None,
     api_key: str,
     stream: bool,
     console: int,

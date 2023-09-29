@@ -26,20 +26,26 @@ repos:
       hooks:
           - id: prettier
             args: [--print-width=88, --tab-width=4]
-            exclude: .github/semantic_release/release_notes.hbs
+            exclude: |
+                (?x)(
+                  .github/semantic_release/release_notes.hbs|
+                  docs/cli.md
+                )
+            additional_dependencies:
+                - prettier
 
     - repo: local
       hooks:
           - id: format
             name: format
             description: Runs Code Auto-Formatters
-            entry: hatch run fmt
+            entry: hatch run lint:fmt
             language: system
             pass_filenames: false
           - id: lint
             name: lint
             description: Runs Code Linters
-            entry: hatch run all
+            entry: hatch run lint:all
             language: system
             pass_filenames: false
             require_serial: false

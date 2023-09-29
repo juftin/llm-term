@@ -2,10 +2,12 @@
 Helper functions for the CLI
 """
 
+from __future__ import annotations
+
 from datetime import datetime, timezone
 from pathlib import Path
 from textwrap import dedent
-from typing import Any, Dict, Generator, List, Optional
+from typing import Any, Generator
 
 import click
 import openai
@@ -19,7 +21,7 @@ from rich.markdown import Markdown
 from rich.panel import Panel
 from rich.spinner import Spinner
 
-from llm_term.about import __application__, __version__
+from llm_term.__about__ import __application__, __version__
 from llm_term.base import Message, NoPadding
 
 
@@ -54,7 +56,7 @@ def check_credentials(api_key: str) -> None:
         raise click.ClickException(msg)
 
 
-def setup_system_message(model: str, message: Optional[str] = None) -> Message:
+def setup_system_message(model: str, message: str | None = None) -> Message:
     """
     Set up the system message
     """
@@ -86,7 +88,7 @@ def chat_session(
     history_file = Path().home() / ".llm-term-history.txt"
     history = FileHistory(str(history_file))
     session: PromptSession = PromptSession(history=history, erase_when_done=True)
-    messages: List[Message] = [system_message]
+    messages: list[Message] = [system_message]
     if chat_message.strip() != "":
         messages.append(Message(role="user", content=chat_message))
     message_counter = 0
@@ -130,29 +132,19 @@ def print_response(
     """
     panel_class = Panel if panel is True else NoPadding
     if stream is False:
-        with Live(
-            Spinner("aesthetic"), refresh_per_second=15, console=console, transient=True
-        ):
-            response = openai.ChatCompletion.create(
-                model=model, messages=messages, stream=False
-            )
+        with Live(Spinner("aesthetic"), refresh_per_second=15, console=console, transient=True):
+            response = openai.ChatCompletion.create(model=model, messages=messages, stream=False)
             complete_response = response["choices"][0]["message"]["content"]
-            console.print(
-                panel_class(Markdown(complete_response), title="🤖", title_align="left")
-            )
+            console.print(panel_class(Markdown(complete_response), title="🤖", title_align="left"))
         message = Message(role="assistant", content=complete_response)
     else:
-        response = openai.ChatCompletion.create(
-            model=model, messages=messages, stream=True
-        )
-        message = render_streamed_response(
-            response=response, console=console, panel=panel
-        )
+        response = openai.ChatCompletion.create(model=model, messages=messages, stream=True)
+        message = render_streamed_response(response=response, console=console, panel=panel)
     return message
 
 
 def render_streamed_response(
-    response: Generator[Dict[str, Any], None, None], console: Console, panel: bool
+    response: Generator[dict[str, Any], None, None], console: Console, panel: bool
 ) -> Message:
     """
     Render the streamed response and a spinner
@@ -177,14 +169,10 @@ def render_streamed_response(
             complete_message += chunk_text
             updated_response = Columns(
                 [
-                    panel_class(
-                        Markdown(complete_message), title="🤖", title_align="left"
-                    ),
+                    panel_class(Markdown(complete_message), title="🤖", title_align="left"),
                     Spinner("aesthetic"),
                 ]
             )
             live.update(updated_response)
-        live.update(
-            panel_class(Markdown(complete_message), title="🤖", title_align="left")
-        )
+        live.update(panel_class(Markdown(complete_message), title="🤖", title_align="left"))
     return Message(role="assistant", content=complete_message)
