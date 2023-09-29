@@ -208,10 +208,6 @@ select = [
   "YTT"
 ]
 target-version = "py38"
-unfixable = [
-  # Don't touch unused imports
-  "F401"
-]
 
 [tool.ruff.flake8-tidy-imports]
 ban-relative-imports = "all"

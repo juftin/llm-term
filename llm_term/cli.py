@@ -2,7 +2,7 @@
 LLM CLI
 """
 
-from typing import Optional, Tuple
+from __future__ import annotations
 
 import click
 import rich.traceback
@@ -85,8 +85,8 @@ rich.traceback.install(show_locals=True)
 )
 def cli(
     model: str,
-    chat: Tuple[str, ...],
-    system: Optional[str],
+    chat: tuple[str, ...],
+    system: str | None,
     api_key: str,
     stream: bool,
     console: int,

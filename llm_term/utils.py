@@ -2,10 +2,12 @@
 Helper functions for the CLI
 """
 
+from __future__ import annotations
+
 from datetime import datetime, timezone
 from pathlib import Path
 from textwrap import dedent
-from typing import Any, Dict, Generator, List, Optional
+from typing import Any, Generator
 
 import click
 import openai
@@ -54,7 +56,7 @@ def check_credentials(api_key: str) -> None:
         raise click.ClickException(msg)
 
 
-def setup_system_message(model: str, message: Optional[str] = None) -> Message:
+def setup_system_message(model: str, message: str | None = None) -> Message:
     """
     Set up the system message
     """
@@ -86,7 +88,7 @@ def chat_session(
     history_file = Path().home() / ".llm-term-history.txt"
     history = FileHistory(str(history_file))
     session: PromptSession = PromptSession(history=history, erase_when_done=True)
-    messages: List[Message] = [system_message]
+    messages: list[Message] = [system_message]
     if chat_message.strip() != "":
         messages.append(Message(role="user", content=chat_message))
     message_counter = 0
@@ -142,7 +144,7 @@ def print_response(
 
 
 def render_streamed_response(
-    response: Generator[Dict[str, Any], None, None], console: Console, panel: bool
+    response: Generator[dict[str, Any], None, None], console: Console, panel: bool
 ) -> Message:
     """
     Render the streamed response and a spinner
