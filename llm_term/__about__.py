@@ -5,4 +5,4 @@ llm-term info file
 __author__ = "Justin Flannery"
 __email__ = "juftin@juftin.com"
 __application__ = "llm-term"
-__version__ = "0.10.0"
+__version__ = "0.10.1"
