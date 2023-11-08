@@ -165,8 +165,6 @@ def render_streamed_response(response: Stream, console: Console, panel: bool) ->
     ) as live:
         chunk: ChatCompletionChunk
         for chunk in response:
-            if chunk.choices[0].finish_reason is not None:
-                break
             chunk_text = chunk.choices[0].delta.content or ""
             complete_message += chunk_text
             updated_response = Columns(
