@@ -152,7 +152,8 @@ module = [
   "pytest.*",
   "rich.*",
   "openai.*",
-  "prompt_toolkit.*"
+  "prompt_toolkit.*",
+  "click.*"
 ]
 
 [tool.ruff]
