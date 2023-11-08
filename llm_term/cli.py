@@ -100,9 +100,10 @@ def cli(
     chat_message = " ".join(chat)
     try:
         print_header(console=rich_console, model=model)
-        check_credentials(api_key=api_key)
+        client = check_credentials(api_key=api_key)
         system_message = setup_system_message(model=model, message=system)
         chat_session(
+            client=client,
             console=rich_console,
             system_message=system_message,
             model=model,
