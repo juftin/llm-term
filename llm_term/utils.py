@@ -7,10 +7,10 @@ from __future__ import annotations
 from datetime import datetime, timezone
 from pathlib import Path
 from textwrap import dedent
-from typing import Any, Generator
 
 import click
-import openai
+from openai import OpenAI, Stream
+from openai.types.chat import ChatCompletionChunk
 from prompt_toolkit import PromptSession
 from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
 from prompt_toolkit.history import FileHistory
@@ -42,12 +42,13 @@ def print_header(console: Console, model: str) -> None:
     console.print("")
 
 
-def check_credentials(api_key: str) -> None:
+def check_credentials(api_key: str) -> OpenAI:
     """
     Check the credentials
     """
     if api_key is not None:
-        openai.api_key = api_key
+        client = OpenAI(api_key=api_key)
+        return client
     else:
         msg = (
             "You must set the OPENAI_API_KEY environment variable "
@@ -74,6 +75,7 @@ def setup_system_message(model: str, message: str | None = None) -> Message:
 
 
 def chat_session(
+    client: OpenAI,
     console: Console,
     system_message: Message,
     model: str,
@@ -110,6 +112,7 @@ def chat_session(
             messages.append(Message(role="user", content=text))
         console.print("")
         streamed_message = print_response(
+            client=client,
             console=console,
             messages=messages,
             model=model,
@@ -125,7 +128,7 @@ def chat_session(
 
 
 def print_response(
-    console: Console, messages: list[Message], model: str, stream: bool, panel: bool
+    client: OpenAI, console: Console, messages: list[Message], model: str, stream: bool, panel: bool
 ) -> Message:
     """
     Stream the response
@@ -133,19 +136,17 @@ def print_response(
     panel_class = Panel if panel is True else NoPadding
     if stream is False:
         with Live(Spinner("aesthetic"), refresh_per_second=15, console=console, transient=True):
-            response = openai.ChatCompletion.create(model=model, messages=messages, stream=False)
+            response = client.chat.completions.create(model=model, messages=messages, stream=False)
             complete_response = response["choices"][0]["message"]["content"]
             console.print(panel_class(Markdown(complete_response), title="🤖", title_align="left"))
         message = Message(role="assistant", content=complete_response)
     else:
-        response = openai.ChatCompletion.create(model=model, messages=messages, stream=True)
+        response = client.chat.completions.create(model=model, messages=messages, stream=True)
         message = render_streamed_response(response=response, console=console, panel=panel)
     return message
 
 
-def render_streamed_response(
-    response: Generator[dict[str, Any], None, None], console: Console, panel: bool
-) -> Message:
+def render_streamed_response(response: Stream, console: Console, panel: bool) -> Message:
     """
     Render the streamed response and a spinner
     """
@@ -162,10 +163,11 @@ def render_streamed_response(
         refresh_per_second=15,
         console=console,
     ) as live:
+        chunk: ChatCompletionChunk
         for chunk in response:
-            if chunk["choices"][0]["finish_reason"] is not None:
+            if chunk.choices[0].finish_reason is not None:
                 break
-            chunk_text = chunk["choices"][0]["delta"].get("content", "")
+            chunk_text = chunk.choices[0].delta.content or ""
             complete_message += chunk_text
             updated_response = Columns(
                 [

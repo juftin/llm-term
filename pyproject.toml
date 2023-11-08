@@ -14,12 +14,13 @@ classifiers = [
   "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: Implementation :: CPython",
   "Programming Language :: Python :: Implementation :: PyPy"
 ]
 dependencies = [
   "click~=8.1.7",
-  "openai~=0.28.1",
+  "openai~=1.1.2",
   "rich~=13.5.3",
   "prompt-toolkit~=3.0.39"
 ]
@@ -39,11 +40,6 @@ Changelog = "https://github.com/juftin/llm-term/releases"
 Documentation = "https://juftin.github.io/llm-term"
 Issues = "https://juftin.github.io/llm-term/issues"
 Source = "https://github.com/juftin/llm-term"
-
-[tool.black]
-line-length = 100
-skip-string-normalization = true
-target-version = ["py38"]
 
 [tool.coverage.paths]
 llm_term = ["llm_term", "*/llm-term/llm_term"]
@@ -65,7 +61,7 @@ parallel = true
 source_pkgs = ["llm_term", "tests"]
 
 [[tool.hatch.envs.all.matrix]]
-python = ["3.8", "3.9", "3.10", "3.11"]
+python = ["3.8", "3.9", "3.10", "3.11", "3.12"]
 
 [tool.hatch.envs.default]
 dependencies = [
@@ -123,9 +119,8 @@ reqs-update = "pip-compile {args:} --upgrade --generate-hashes --output-file req
 
 [tool.hatch.envs.lint]
 dependencies = [
-  "black>=23.1.0",
-  "mypy>=1.0.0",
-  "ruff>=0.0.243"
+  "mypy>=1.6.1",
+  "ruff~=0.1.4"
 ]
 detached = true
 
@@ -135,7 +130,7 @@ all = [
   "typing"
 ]
 fmt = [
-  "black {args:.}",
+  "ruff format {args:.}",
   "ruff --fix {args:.}",
   "style"
 ]
@@ -144,7 +139,7 @@ precommit = [
 ]
 style = [
   "ruff {args:.}",
-  "black --check --diff {args:.}"
+  "ruff format --check --diff {args:.}"
 ]
 typing = "mypy --install-types --non-interactive {args:llm_term tests}"
 
@@ -157,7 +152,8 @@ module = [
   "pytest.*",
   "rich.*",
   "openai.*",
-  "prompt_toolkit.*"
+  "prompt_toolkit.*",
+  "click.*"
 ]
 
 [tool.ruff]
@@ -181,31 +177,30 @@ ignore = [
 ]
 line-length = 100
 select = [
-  "A",
-  "ARG",
-  "B",
-  "C",
-  "DTZ",
-  "E",
-  "EM",
-  "F",
-  "FBT",
-  "I",
-  "ICN",
-  "ISC",
-  "N",
-  "PLC",
-  "PLE",
-  "PLR",
-  "PLW",
-  "Q",
-  "RUF",
-  "S",
-  "T",
-  "TID",
-  "UP",
-  "W",
-  "YTT"
+  "A",  # flake8-builtins
+  "ARG",  # flake8-unused-arguments
+  "B",  # flake8-bugbear
+  "C",  # mccabe
+  "DTZ",  # flake8-datetimez
+  "E",  # pycodestyle (Error)
+  "EM",  # flake8-errmsg
+  "F",  # Pyflakes
+  "FBT",  # flake8-boolean-trap
+  "I",  # isort
+  "ICN",  # flake8-import-conventions
+  "N",  # pep8-naming
+  "PLC",  # Pylint (Convention message)
+  "PLE",  # Pylint (Error message)
+  "PLR",  # Pylint (Refactor message)
+  "PLW",  # Pylint (Warning message)
+  "Q",  # flake8-quotes
+  "RUF",  # Ruff-specific rules
+  "S",  # flake8-bandit
+  "T",  # flake8-debugger (T10) and flake8-print (T20)
+  "TID",  # flake8-tidy-imports
+  "UP",  # pyupgrade
+  "W",  # pycodestyle (Warning)
+  "YTT"  # flake8-2020
 ]
 target-version = "py38"
 
