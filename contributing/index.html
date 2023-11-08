@@ -563,7 +563,7 @@ make sure to install pre-commit as well: <code>pipx install pre-commit</code></p
 <tr>
 <td>Run Formatting</td>
 <td><code>hatch run lint:fmt</code></td>
-<td>Runs <code>black</code> and <code>ruff</code> code formatters</td>
+<td>Runs <code>ruff</code> code formatter</td>
 </tr>
 <tr>
 <td>Run Linting</td>
@@ -598,6 +598,11 @@ make sure to install pre-commit as well: <code>pipx install pre-commit</code></p
 </tbody>
 </table>
 <h3 id="hatch-explanation">Hatch Explanation<a class="headerlink" href="#hatch-explanation" title="Permanent link">#</a></h3>
+<p>Hatch is a Python package manager. It's most basic use is as a standardized build-system.
+However, hatch also has some extra features which this project takes advantage of.
+These features include virtual environment management and the organization of common
+scripts like linting and testing. All the operations in hatch take place in one
+of its managed virtual environments.</p>
 <p>Hatch has a variety of environments, to see them simply ask hatch:</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="exec-1--__tabbed_1_1" name="exec-1--__tabbed_1" type="radio" /><input id="exec-1--__tabbed_1_2" name="exec-1--__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="exec-1--__tabbed_1_1">hatch CLI</label><label for="exec-1--__tabbed_1_2">Output</label></div>
 <div class="tabbed-content">
@@ -631,9 +636,9 @@ make sure to install pre-commit as well: <code>pipx install pre-commit</code></p
 <a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│         │         │                            │ test        │
 <a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│         │         │                            │ test-cov    │
 <a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>├─────────┼─────────┼────────────────────────────┼─────────────┤
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│ lint    │ virtual │ black&gt;=23.1.0              │ all         │
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│         │         │ mypy&gt;=1.0.0                │ fmt         │
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│         │         │ ruff&gt;=0.0.243              │ precommit   │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│ lint    │ virtual │ mypy&gt;=1.6.1                │ all         │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│         │         │ ruff~=0.1.4                │ fmt         │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│         │         │                            │ precommit   │
 <a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│         │         │                            │ style       │
 <a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│         │         │                            │ typing      │
 <a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>└─────────┴─────────┴────────────────────────────┴─────────────┘
@@ -645,12 +650,13 @@ make sure to install pre-commit as well: <code>pipx install pre-commit</code></p
 <a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│      │         │ all.py3.9  │ pytest              │ cov-report │
 <a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│      │         │ all.py3.10 │                     │ test       │
 <a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│      │         │ all.py3.11 │                     │ test-cov   │
-<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>└──────┴─────────┴────────────┴─────────────────────┴────────────┘
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│      │         │ all.py3.12 │                     │            │
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>└──────┴─────────┴────────────┴─────────────────────┴────────────┘
 </code></pre></div>
 </div>
 </div>
 </div>
-<p>That above command will tell you that there are five environments that
+<p>That above command will tell you that there are four environments that
 you can use:</p>
 <ul>
 <li><code>default</code></li>
