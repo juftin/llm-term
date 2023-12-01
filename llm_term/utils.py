@@ -7,10 +7,15 @@ from __future__ import annotations
 from datetime import datetime, timezone
 from pathlib import Path
 from textwrap import dedent
+from typing import Iterator
 
-import click
-from openai import OpenAI, Stream
-from openai.types.chat import ChatCompletionChunk
+from click.exceptions import ClickException
+from langchain.chat_models import ChatAnthropic, ChatOpenAI
+from langchain.llms import GPT4All
+from langchain.llms.base import BaseLLM
+from langchain.schema import AIMessage, BaseMessage, HumanMessage, SystemMessage
+from langchain_core.language_models import BaseChatModel
+from langchain_core.messages import BaseMessageChunk
 from prompt_toolkit import PromptSession
 from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
 from prompt_toolkit.history import FileHistory
@@ -22,7 +27,7 @@ from rich.panel import Panel
 from rich.spinner import Spinner
 
 from llm_term.__about__ import __application__, __version__
-from llm_term.base import Message, NoPadding
+from llm_term.base import NoPadding
 
 
 def print_header(console: Console, model: str) -> None:
@@ -42,43 +47,44 @@ def print_header(console: Console, model: str) -> None:
     console.print("")
 
 
-def check_credentials(api_key: str) -> OpenAI:
+def get_llm(provider: str, api_key: str, model: str | None) -> tuple[BaseChatModel | BaseLLM, str]:
     """
     Check the credentials
     """
-    if api_key is not None:
-        client = OpenAI(api_key=api_key)
-        return client
+    if provider == "openai":
+        chat_model = model or "gpt-3.5-turbo"
+        return ChatOpenAI(openai_api_key=api_key, model_name=chat_model), chat_model
+    elif provider == "anthropic":
+        chat_model = model or "claude"
+        return ChatAnthropic(anthropic_api_key=api_key), chat_model
+    elif provider == "gpt4all":
+        chat_model = model or "mistral-7b-openorca.Q4_0.gguf"
+        return GPT4All(model=chat_model, allow_download=True), chat_model
     else:
-        msg = (
-            "You must set the OPENAI_API_KEY environment variable "
-            "or set the `--api-key` / `-k` option"
-        )
-        raise click.ClickException(msg)
+        msg = f"Provider {provider} is not supported... yet"
+        raise ClickException(msg)
 
 
-def setup_system_message(model: str, message: str | None = None) -> Message:
+def setup_system_message(message: str | None = None) -> SystemMessage:
     """
     Set up the system message
     """
     setup = f"""
-        You are a helpful AI assistant named {__application__}, built by OpenAI and based on
-        the model {model}. Help the user by responding to their request, the output should
-        be concise and always written in markdown. Ensure that all code blocks have the correct
-        language tag.
+        You are a helpful AI assistant named {__application__}. Help the user by responding to
+        their request, the output should be concise and always written in markdown format. Ensure
+        that all code blocks have the correct language tag.
 
         The current UTC date and time at the start of this conversation is
         {datetime.now(tz=timezone.utc).isoformat()}
         """
     system_message = message or dedent(setup).strip()
-    return Message(role="system", content=system_message)
+    return SystemMessage(content=system_message)
 
 
 def chat_session(
-    client: OpenAI,
+    client: BaseChatModel | BaseLLM,
     console: Console,
-    system_message: Message,
-    model: str,
+    system_message: SystemMessage,
     stream: bool,
     panel: bool,
     chat_message: str,
@@ -90,9 +96,9 @@ def chat_session(
     history_file = Path().home() / ".llm-term-history.txt"
     history = FileHistory(str(history_file))
     session: PromptSession = PromptSession(history=history, erase_when_done=True)
-    messages: list[Message] = [system_message]
+    messages: list[BaseMessage] = [system_message]
     if chat_message.strip() != "":
-        messages.append(Message(role="user", content=chat_message))
+        messages.append(HumanMessage(content=chat_message))
     message_counter = 0
     while True:
         if message_counter == 0 and len(messages) == 2:  # noqa: PLR2004
@@ -109,13 +115,12 @@ def chat_session(
             if panel is False:
                 console.print("")
                 console.rule()
-            messages.append(Message(role="user", content=text))
+            messages.append(HumanMessage(content=text))
         console.print("")
         streamed_message = print_response(
             client=client,
             console=console,
             messages=messages,
-            model=model,
             stream=stream,
             panel=panel,
         )
@@ -128,25 +133,34 @@ def chat_session(
 
 
 def print_response(
-    client: OpenAI, console: Console, messages: list[Message], model: str, stream: bool, panel: bool
-) -> Message:
+    client: BaseChatModel | BaseLLM,
+    console: Console,
+    messages: list[BaseMessage],
+    stream: bool,
+    panel: bool,
+) -> AIMessage:
     """
     Stream the response
     """
     panel_class = Panel if panel is True else NoPadding
     if stream is False:
         with Live(Spinner("aesthetic"), refresh_per_second=15, console=console, transient=True):
-            response = client.chat.completions.create(model=model, messages=messages, stream=False)
-            complete_response = response["choices"][0]["message"]["content"]
-            console.print(panel_class(Markdown(complete_response), title="🤖", title_align="left"))
-        message = Message(role="assistant", content=complete_response)
+            response = client.invoke(input=messages)
+            if isinstance(response, BaseMessage):
+                text = response.content or ""
+            else:
+                text = response or ""
+            console.print(panel_class(Markdown(response.content), title="🤖", title_align="left"))
+        message = AIMessage(content=text)
     else:
-        response = client.chat.completions.create(model=model, messages=messages, stream=True)
+        response = client.stream(input=messages)
         message = render_streamed_response(response=response, console=console, panel=panel)
     return message
 
 
-def render_streamed_response(response: Stream, console: Console, panel: bool) -> Message:
+def render_streamed_response(
+    response: Iterator[BaseMessageChunk | str], console: Console, panel: bool
+) -> AIMessage:
     """
     Render the streamed response and a spinner
     """
@@ -163,9 +177,11 @@ def render_streamed_response(response: Stream, console: Console, panel: bool) ->
         refresh_per_second=15,
         console=console,
     ) as live:
-        chunk: ChatCompletionChunk
         for chunk in response:
-            chunk_text = chunk.choices[0].delta.content or ""
+            if isinstance(chunk, BaseMessageChunk):
+                chunk_text = chunk.content or ""
+            else:
+                chunk_text = chunk or ""
             complete_message += chunk_text
             updated_response = Columns(
                 [
@@ -175,4 +191,4 @@ def render_streamed_response(response: Stream, console: Console, panel: bool) ->
             )
             live.update(updated_response)
         live.update(panel_class(Markdown(complete_message), title="🤖", title_align="left"))
-    return Message(role="assistant", content=complete_message)
+    return AIMessage(content=complete_message)

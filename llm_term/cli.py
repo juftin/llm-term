@@ -11,7 +11,7 @@ from rich.console import Console
 from llm_term.__about__ import __application__, __version__
 from llm_term.utils import (
     chat_session,
-    check_credentials,
+    get_llm,
     print_header,
     setup_system_message,
 )
@@ -24,12 +24,26 @@ rich.traceback.install(show_locals=True)
 @click.option(
     "--model",
     "-m",
-    help="The GPT model to use",
-    envvar="OPENAI_MODEL",
+    help="The LLM model to use",
+    envvar="LLM_MODEL",
     show_envvar=True,
-    default="gpt-3.5-turbo",
+    default=None,
     type=click.STRING,
-    show_default=True,
+)
+@click.option(
+    "--provider",
+    "-p",
+    help="The LLM provider to use",
+    envvar="LLM_PROVIDER",
+    show_envvar=True,
+    default="openai",
+    type=click.Choice(
+        [
+            "openai",
+            "anthropic",
+            "gpt4all",
+        ]
+    ),
 )
 @click.argument(
     "chat",
@@ -41,7 +55,7 @@ rich.traceback.install(show_locals=True)
     "--system",
     "-s",
     help="The system message to use",
-    envvar="OPENAI_SYSTEM_MESSAGE",
+    envvar="LLM_SYSTEM_MESSAGE",
     show_envvar=True,
     default=None,
     type=click.STRING,
@@ -49,15 +63,15 @@ rich.traceback.install(show_locals=True)
 @click.option(
     "--api-key",
     "-k",
-    help="The OpenAI API key",
-    envvar="OPENAI_API_KEY",
+    help="The API key to use",
+    envvar="LLM_API_KEY",
     show_envvar=True,
     type=click.STRING,
 )
 @click.option(
     "--stream/--no-stream",
     help="Stream the response",
-    envvar="OPENAI_STREAM",
+    envvar="LLM_STREAM",
     show_envvar=True,
     default=True,
     type=click.BOOL,
@@ -92,6 +106,7 @@ def cli(
     console: int,
     border: bool,
     avatar: str,
+    provider: str,
 ) -> None:
     """
     llm-term is a command line interface for OpenAI's Chat API.
@@ -99,14 +114,13 @@ def cli(
     rich_console: Console = Console(width=console)
     chat_message = " ".join(chat)
     try:
-        print_header(console=rich_console, model=model)
-        client = check_credentials(api_key=api_key)
-        system_message = setup_system_message(model=model, message=system)
+        client, model_name = get_llm(provider=provider, api_key=api_key, model=model)
+        print_header(console=rich_console, model=model_name)
+        system_message = setup_system_message(message=system)
         chat_session(
             client=client,
             console=rich_console,
             system_message=system_message,
-            model=model,
             stream=stream,
             panel=border,
             chat_message=chat_message,

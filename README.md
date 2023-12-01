@@ -1,9 +1,9 @@
 # llm-term
 
-Chat with OpenAI's GPT models directly from the command line.
+Chat with LLM models directly from the command line.
 
 <p align="center">
-<img width="600" alt="image" src="https://github.com/juftin/llm-term/assets/49741340/4233a9a7-dd24-44c3-b67d-5d13b80c1f89">
+<img width="600" alt="image" src="https://i.imgur.com/1BUegLB.png">
 </p>
 
 [![PyPI](https://img.shields.io/pypi/v/llm-term?color=blue&label=🤖%20llm-term)](https://github.com/juftin/llm-term)
@@ -37,19 +37,29 @@ Then, you can chat with the model directly from the command line:
 llm-term
 ```
 
-Make sure you have an OpenAI API key set as an environment variable
-(this can also set via the `--api-key` / `-k` flag in the CLI):
+`llm-term` works with multiple LLM providers, but by default it uses OpenAI.
+Most providers require extra packages to be installed, so make sure you
+read the [Providers](#providers) section below. To use a different provider, you
+can set the `--provider` / `-p` flag:
 
 ```shell
-export OPENAI_API_KEY="xxxxxxxxxxxxxx"
+llm-term --provider anthropic
+```
+
+If needed, make sure you have your LLM's API key set as an environment variable
+(this can also set via the `--api-key` / `-k` flag in the CLI). If your LLM uses
+a particular environment variable for its API key, such as `OPENAI_API_KEY`,
+that will be detected automatically.
+
+```shell
+export LLM_API_KEY="xxxxxxxxxxxxxx"
 ```
 
 Optionally, you can set a custom model. llm-term defaults
-to `gpt-3.5-turbo` (this can also set via the
-`--model` / `-m` flag in the CLI):
+to `gpt-3.5-turbo` (this can also set via the `--model` / `-m` flag in the CLI):
 
 ```shell
-export OPENAI_MODEL="gpt-4"
+export LLM_MODEL="gpt-4"
 ```
 
 Want to start the conversion directly from the command line? No problem,
@@ -64,5 +74,44 @@ prompt for chatting with the model, but you can set your own prompt (this
 can also set via the `--system` / `-s` flag in the CLI):
 
 ```shell
-export OPENAI_SYSTEM_MESSAGE="You are a helpful assistant who talks like a pirate."
+export LLM_SYSTEM_MESSAGE="You are a helpful assistant who talks like a pirate."
+```
+
+## Providers
+
+### OpenAI
+
+By default, llm-term uses OpenAI as your LLM provider. The default model is
+`gpt-3.5-turbo` and you can also use the `OPENAI_API_KEY` environment variable
+to set your API key.
+
+### Anthropic
+
+Anthropic is a new LLM provider that is currently in private beta. You can
+request access to the beta [here](https://www.anthropic.com/). The default
+model is `claude`, and you can use the `ANTHROPIC_API_KEY` environment variable.
+To use `anthropic` as your provider you must install the `anthropic` extra.
+
+```shell
+pipx install "llm-term[anthropic]"
+```
+
+```shell
+llm-term --provider anthropic
+```
+
+### GPT4All
+
+GPT4All is a an open source LLM provider. These models run locally on your
+machine, so you don't need to worry about API keys or rate limits. The default
+model is `mistral-7b-openorca.Q4_0.gguf`, and you can see what models are available on the [GPT4All
+Website](https://gpt4all.io/index.html). Models are downloaded automatically when you first use them.
+To use GPT4All as your provider you must install the `gpt4all` extra.
+
+```bash
+pipx install "llm-term[gpt4all]"
+```
+
+```shell
+llm-term --provider gpt4all --model mistral-7b-openorca.Q4_0.gguf
 ```

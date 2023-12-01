@@ -2,7 +2,7 @@
 Base classes and types for llm_term
 """
 
-from typing import Any, TypedDict
+from typing import Any
 
 from rich.console import RenderableType
 from rich.padding import Padding
@@ -20,12 +20,3 @@ class NoPadding(Padding):
         _ = kwargs
         pad = (0, 0, 0, 0)
         super().__init__(renderable, pad=pad)
-
-
-class Message(TypedDict):
-    """
-    Message
-    """
-
-    role: str
-    content: str
