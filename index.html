@@ -309,6 +309,40 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#providers" class="md-nav__link">
+    Providers
+  </a>
+  
+    <nav class="md-nav" aria-label="Providers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#openai" class="md-nav__link">
+    OpenAI
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#anthropic" class="md-nav__link">
+    Anthropic
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gpt4all" class="md-nav__link">
+    GPT4All
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -395,6 +429,40 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#providers" class="md-nav__link">
+    Providers
+  </a>
+  
+    <nav class="md-nav" aria-label="Providers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#openai" class="md-nav__link">
+    OpenAI
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#anthropic" class="md-nav__link">
+    Anthropic
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gpt4all" class="md-nav__link">
+    GPT4All
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -414,9 +482,9 @@
 
 
 <h1 id="llm-term">llm-term<a class="headerlink" href="#llm-term" title="Permanent link">#</a></h1>
-<p>Chat with OpenAI's GPT models directly from the command line.</p>
+<p>Chat with LLM models directly from the command line.</p>
 <p align="center">
-<img width="600" alt="image" src="https://github.com/juftin/llm-term/assets/49741340/4233a9a7-dd24-44c3-b67d-5d13b80c1f89">
+<img width="600" alt="image" src="https://i.imgur.com/1BUegLB.png">
 </p>
 
 <p><a href="https://github.com/juftin/llm-term"><img alt="PyPI" src="https://img.shields.io/pypi/v/llm-term?color=blue&amp;label=🤖%20llm-term" /></a>
@@ -441,23 +509,54 @@
 <p>Then, you can chat with the model directly from the command line:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>llm-term
 </code></pre></div>
-<p>Make sure you have an OpenAI API key set as an environment variable
-(this can also set via the <code>--api-key</code> / <code>-k</code> flag in the CLI):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">OPENAI_API_KEY</span><span class="o">=</span><span class="s2">&quot;xxxxxxxxxxxxxx&quot;</span>
+<p><code>llm-term</code> works with multiple LLM providers, but by default it uses OpenAI.
+Most providers require extra packages to be installed, so make sure you
+read the <a href="#providers">Providers</a> section below. To use a different provider, you
+can set the <code>--provider</code> / <code>-p</code> flag:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>llm-term<span class="w"> </span>--provider<span class="w"> </span>anthropic
+</code></pre></div>
+<p>If needed, make sure you have your LLM's API key set as an environment variable
+(this can also set via the <code>--api-key</code> / <code>-k</code> flag in the CLI). If your LLM uses
+a particular environment variable for its API key, such as <code>OPENAI_API_KEY</code>,
+that will be detected automatically.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">LLM_API_KEY</span><span class="o">=</span><span class="s2">&quot;xxxxxxxxxxxxxx&quot;</span>
 </code></pre></div>
 <p>Optionally, you can set a custom model. llm-term defaults
-to <code>gpt-3.5-turbo</code> (this can also set via the
-<code>--model</code> / <code>-m</code> flag in the CLI):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">OPENAI_MODEL</span><span class="o">=</span><span class="s2">&quot;gpt-4&quot;</span>
+to <code>gpt-3.5-turbo</code> (this can also set via the <code>--model</code> / <code>-m</code> flag in the CLI):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">LLM_MODEL</span><span class="o">=</span><span class="s2">&quot;gpt-4&quot;</span>
 </code></pre></div>
 <p>Want to start the conversion directly from the command line? No problem,
 just pass your prompt to <code>llm-term</code>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>llm-term<span class="w"> </span>show<span class="w"> </span>me<span class="w"> </span>python<span class="w"> </span>code<span class="w"> </span>to<span class="w"> </span>detect<span class="w"> </span>a<span class="w"> </span>palindrome
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>llm-term<span class="w"> </span>show<span class="w"> </span>me<span class="w"> </span>python<span class="w"> </span>code<span class="w"> </span>to<span class="w"> </span>detect<span class="w"> </span>a<span class="w"> </span>palindrome
 </code></pre></div>
 <p>You can also set a custom system prompt. llm-term defaults to a reasonable
 prompt for chatting with the model, but you can set your own prompt (this
 can also set via the <code>--system</code> / <code>-s</code> flag in the CLI):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">OPENAI_SYSTEM_MESSAGE</span><span class="o">=</span><span class="s2">&quot;You are a helpful assistant who talks like a pirate.&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">LLM_SYSTEM_MESSAGE</span><span class="o">=</span><span class="s2">&quot;You are a helpful assistant who talks like a pirate.&quot;</span>
+</code></pre></div>
+<h2 id="providers">Providers<a class="headerlink" href="#providers" title="Permanent link">#</a></h2>
+<h3 id="openai">OpenAI<a class="headerlink" href="#openai" title="Permanent link">#</a></h3>
+<p>By default, llm-term uses OpenAI as your LLM provider. The default model is
+<code>gpt-3.5-turbo</code> and you can also use the <code>OPENAI_API_KEY</code> environment variable
+to set your API key.</p>
+<h3 id="anthropic">Anthropic<a class="headerlink" href="#anthropic" title="Permanent link">#</a></h3>
+<p>Anthropic is a new LLM provider that is currently in private beta. You can
+request access to the beta <a href="https://www.anthropic.com/">here</a>. The default
+model is <code>claude</code>, and you can use the <code>ANTHROPIC_API_KEY</code> environment variable.
+To use <code>anthropic</code> as your provider you must install the <code>anthropic</code> extra.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>pipx<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;llm-term[anthropic]&quot;</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>llm-term<span class="w"> </span>--provider<span class="w"> </span>anthropic
+</code></pre></div>
+<h3 id="gpt4all">GPT4All<a class="headerlink" href="#gpt4all" title="Permanent link">#</a></h3>
+<p>GPT4All is a an open source LLM provider. These models run locally on your
+machine, so you don't need to worry about API keys or rate limits. The default
+model is <code>mistral-7b-openorca.Q4_0.gguf</code>, and you can see what models are available on the <a href="https://gpt4all.io/index.html">GPT4All
+Website</a>. Models are downloaded automatically when you first use them.
+To use GPT4All as your provider you must install the <code>gpt4all</code> extra.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>pipx<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;llm-term[gpt4all]&quot;</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>llm-term<span class="w"> </span>--provider<span class="w"> </span>gpt4all<span class="w"> </span>--model<span class="w"> </span>mistral-7b-openorca.Q4_0.gguf
 </code></pre></div>
 
 
