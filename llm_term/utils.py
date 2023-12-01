@@ -4,7 +4,6 @@ Helper functions for the CLI
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
 from pathlib import Path
 from textwrap import dedent
 from typing import Iterator
@@ -55,8 +54,8 @@ def get_llm(provider: str, api_key: str, model: str | None) -> tuple[BaseChatMod
         chat_model = model or "gpt-3.5-turbo"
         return ChatOpenAI(openai_api_key=api_key, model_name=chat_model), chat_model
     elif provider == "anthropic":
-        chat_model = model or "claude"
-        return ChatAnthropic(anthropic_api_key=api_key), chat_model
+        chat_model = model or "claude-2.1"
+        return ChatAnthropic(anthropic_api_key=api_key, model_name=chat_model), chat_model
     elif provider == "gpt4all":
         chat_model = model or "mistral-7b-openorca.Q4_0.gguf"
         return GPT4All(model=chat_model, allow_download=True), chat_model
@@ -71,11 +70,9 @@ def setup_system_message(message: str | None = None) -> SystemMessage:
     """
     setup = f"""
         You are a helpful AI assistant named {__application__}. Help the user by responding to
-        their request, the output should be concise and always written in markdown format. Ensure
-        that all code blocks have the correct language tag.
-
-        The current UTC date and time at the start of this conversation is
-        {datetime.now(tz=timezone.utc).isoformat()}
+        their request, the output should be concise and always written in markdown format.
+        Answer questions only if you know the answer or can make a well-informed guess;
+        otherwise tell the you don't know or ask for more information.
         """
     system_message = message or dedent(setup).strip()
     return SystemMessage(content=system_message)
