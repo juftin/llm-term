@@ -332,6 +332,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#mistralai" class="md-nav__link">
+    MistralAI
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#gpt4all" class="md-nav__link">
     GPT4All
   </a>
@@ -452,6 +459,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#mistralai" class="md-nav__link">
+    MistralAI
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#gpt4all" class="md-nav__link">
     GPT4All
   </a>
@@ -548,15 +562,23 @@ To use <code>anthropic</code> as your provider you must install the <code>anthro
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>llm-term<span class="w"> </span>--provider<span class="w"> </span>anthropic
 </code></pre></div>
+<h3 id="mistralai">MistralAI<a class="headerlink" href="#mistralai" title="Permanent link">#</a></h3>
+<p><a href="https://mistral.ai/">MistralAI</a> is a European LLM provider. You can request
+access to the MistralAI <a href="https://console.mistral.ai/">here</a>. The default model is
+<code>mistral-small</code>, and you can use the <code>MISTRAL_API_KEY</code> environment variable.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>pipx<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;llm-term[mistralai]&quot;</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>llm-term<span class="w"> </span>--provider<span class="w"> </span>mistralai
+</code></pre></div>
 <h3 id="gpt4all">GPT4All<a class="headerlink" href="#gpt4all" title="Permanent link">#</a></h3>
 <p>GPT4All is a an open source LLM provider. These models run locally on your
 machine, so you don't need to worry about API keys or rate limits. The default
 model is <code>mistral-7b-openorca.Q4_0.gguf</code>, and you can see what models are available on the <a href="https://gpt4all.io/index.html">GPT4All
 Website</a>. Models are downloaded automatically when you first use them.
 To use GPT4All as your provider you must install the <code>gpt4all</code> extra.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>pipx<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;llm-term[gpt4all]&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>pipx<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;llm-term[gpt4all]&quot;</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>llm-term<span class="w"> </span>--provider<span class="w"> </span>gpt4all<span class="w"> </span>--model<span class="w"> </span>mistral-7b-openorca.Q4_0.gguf
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>llm-term<span class="w"> </span>--provider<span class="w"> </span>gpt4all<span class="w"> </span>--model<span class="w"> </span>mistral-7b-openorca.Q4_0.gguf
 </code></pre></div>
 
 
