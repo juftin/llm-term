@@ -100,6 +100,20 @@ pipx install "llm-term[anthropic]"
 llm-term --provider anthropic
 ```
 
+### MistralAI
+
+[MistralAI](https://mistral.ai/) is a European LLM provider. You can request
+access to the MistralAI [here](https://console.mistral.ai/). The default model is
+`mistral-small`, and you can use the `MISTRAL_API_KEY` environment variable.
+
+```shell
+pipx install "llm-term[mistralai]"
+```
+
+```shell
+llm-term --provider mistralai
+```
+
 ### GPT4All
 
 GPT4All is a an open source LLM provider. These models run locally on your

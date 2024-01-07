@@ -9,8 +9,6 @@ from textwrap import dedent
 from typing import Iterator
 
 from click.exceptions import ClickException
-from langchain.chat_models import ChatAnthropic, ChatOpenAI
-from langchain.llms import GPT4All
 from langchain.llms.base import BaseLLM
 from langchain.schema import AIMessage, BaseMessage, HumanMessage, SystemMessage
 from langchain_core.language_models import BaseChatModel
@@ -46,19 +44,45 @@ def print_header(console: Console, model: str) -> None:
     console.print("")
 
 
+providers: list[str] = [
+    "openai",
+    "anthropic",
+    "gpt4all",
+    "mistralai",
+]
+
+
 def get_llm(provider: str, api_key: str, model: str | None) -> tuple[BaseChatModel | BaseLLM, str]:
     """
     Check the credentials
     """
     if provider == "openai":
+        from langchain_openai import ChatOpenAI
+
         chat_model = model or "gpt-3.5-turbo"
         return ChatOpenAI(openai_api_key=api_key, model_name=chat_model), chat_model
     elif provider == "anthropic":
+        from langchain_community.chat_models import ChatAnthropic
+
         chat_model = model or "claude-2.1"
         return ChatAnthropic(anthropic_api_key=api_key, model_name=chat_model), chat_model
     elif provider == "gpt4all":
+        from langchain_community.llms import GPT4All
+
         chat_model = model or "mistral-7b-openorca.Q4_0.gguf"
         return GPT4All(model=chat_model, allow_download=True), chat_model
+    elif provider == "mistralai":
+        try:
+            from langchain_mistralai import ChatMistralAI
+
+            chat_model = model or "mistral-small"
+            return ChatMistralAI(mistral_api_key=api_key, model=chat_model), chat_model
+        except ImportError as ie:
+            msg = (
+                "The `mistralai` provider requires the `mistralai` extra to be installed: "
+                'pipx install "llm-term[mistralai]"'
+            )
+            raise ClickException(msg) from ie
     else:
         msg = f"Provider {provider} is not supported... yet"
         raise ClickException(msg)

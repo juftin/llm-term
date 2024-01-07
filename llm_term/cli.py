@@ -9,12 +9,7 @@ import rich.traceback
 from rich.console import Console
 
 from llm_term.__about__ import __application__, __version__
-from llm_term.utils import (
-    chat_session,
-    get_llm,
-    print_header,
-    setup_system_message,
-)
+from llm_term.utils import chat_session, get_llm, print_header, providers, setup_system_message
 
 rich.traceback.install(show_locals=True)
 
@@ -37,13 +32,7 @@ rich.traceback.install(show_locals=True)
     envvar="LLM_PROVIDER",
     show_envvar=True,
     default="openai",
-    type=click.Choice(
-        [
-            "openai",
-            "anthropic",
-            "gpt4all",
-        ]
-    ),
+    type=click.Choice(providers),
 )
 @click.argument(
     "chat",
