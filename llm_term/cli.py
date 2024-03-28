@@ -104,7 +104,7 @@ def cli(
     chat_message = " ".join(chat)
     try:
         client, model_name = get_llm(provider=provider, api_key=api_key, model=model)
-        print_header(console=rich_console, model=model_name)
+        print_header(console=rich_console, model=model_name, provider=provider)
         system_message = setup_system_message(message=system)
         chat_session(
             client=client,
