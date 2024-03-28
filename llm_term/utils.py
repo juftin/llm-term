@@ -33,8 +33,8 @@ def print_header(console: Console, model: str, provider: str) -> None:
     """
     console.print(
         Panel(
-            f"[bold red]{__application__} "
-            f"is a command line interface for OpenAI's Chat API[/bold red]",
+            f"[bold red]{__application__}: "
+            f"Chat with Language Models from the Command Line[/bold red]",
             title=f"[blue bold]{__application__} v{__version__}[/blue bold]",
             subtitle=f"[yellow bold]{model} ({provider})[/yellow bold]",
             style="green bold",
