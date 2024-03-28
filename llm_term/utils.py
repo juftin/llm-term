@@ -27,16 +27,16 @@ from llm_term.__about__ import __application__, __version__
 from llm_term.base import NoPadding
 
 
-def print_header(console: Console, model: str) -> None:
+def print_header(console: Console, model: str, provider: str) -> None:
     """
     Print the header
     """
     console.print(
         Panel(
-            f"[bold red]{__application__} "
-            f"is a command line interface for OpenAI's Chat API[/bold red]",
+            f"[bold red]{__application__}: "
+            f"Chat with Language Models from the Command Line[/bold red]",
             title=f"[blue bold]{__application__} v{__version__}[/blue bold]",
-            subtitle=f"[yellow bold]{model}[/yellow bold]",
+            subtitle=f"[yellow bold]{model} ({provider})[/yellow bold]",
             style="green bold",
             expand=False,
         ),
@@ -62,7 +62,7 @@ def get_llm(provider: str, api_key: str, model: str | None) -> tuple[BaseChatMod
         chat_model = model or "gpt-3.5-turbo"
         return ChatOpenAI(openai_api_key=api_key, model_name=chat_model), chat_model
     elif provider == "anthropic":
-        from langchain_community.chat_models import ChatAnthropic
+        from langchain_anthropic import ChatAnthropic
 
         chat_model = model or "claude-2.1"
         return ChatAnthropic(anthropic_api_key=api_key, model_name=chat_model), chat_model

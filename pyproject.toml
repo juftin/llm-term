@@ -22,9 +22,9 @@ dependencies = [
   "click~=8.1.7",
   "rich~=13.5.3",
   "prompt-toolkit~=3.0.39",
-  "langchain~=0.1.0",
-  "langchain-community~=0.0.9",
-  "langchain-openai~=0.0.2",
+  "langchain~=0.1.13",
+  "langchain-community~=0.0.29",
+  "langchain-openai~=0.1.1",
   "numpy~=1.24.4; python_version < '3.9'",
   "numpy~=1.26.1; python_version > '3.8'"
 ]
@@ -37,10 +37,10 @@ readme = "README.md"
 requires-python = ">=3.8,<4"
 
 [project.optional-dependencies]
-all = ["anthropic~=0.7.7", "gpt4all~=2.0.2", "langchain-mistralai~=0.0.1"]
-anthropic = ["anthropic~=0.7.7"]
-gpt4all = ["gpt4all~=2.0.2"]
-mistralai = ["langchain-mistralai~=0.0.1"]
+all = ["langchain-anthropic~=0.1.4", "gpt4all~=2.3.2", "langchain-mistralai~=0.1.0"]
+anthropic = ["langchain-anthropic~=0.1.4"]
+gpt4all = ["gpt4all~=2.3.2"]
+mistralai = ["langchain-mistralai~=0.1.0"]
 
 [project.scripts]
 llm-term = "llm_term.cli:cli"
@@ -117,15 +117,15 @@ serve = ["mkdocs serve --dev-addr localhost:8080 --livereload"]
 dependencies = [
   "pip-tools~=7.1.0"
 ]
-detached = false
+detached = true
 
 [tool.hatch.envs.gen.scripts]
 release = [
   "npm install --prefix .github/semantic_release/",
   "npx --prefix .github/semantic_release/ semantic-release {args:}"
 ]
-reqs = "pip-compile {args:} --generate-hashes --output-file requirements.txt"
-reqs-update = "pip-compile {args:} --upgrade --generate-hashes --output-file requirements.txt"
+reqs = "pip-compile {args:} --generate-hashes --output-file requirements.txt --all-extras"
+reqs-update = "pip-compile {args:} --upgrade --generate-hashes --output-file requirements.txt --all-extras"
 
 [tool.hatch.envs.lint]
 dependencies = [

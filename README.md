@@ -87,10 +87,10 @@ to set your API key.
 
 ### Anthropic
 
-Anthropic is a new LLM provider that is currently in private beta. You can
-request access to the beta [here](https://www.anthropic.com/). The default
-model is `claude`, and you can use the `ANTHROPIC_API_KEY` environment variable.
-To use `anthropic` as your provider you must install the `anthropic` extra.
+You can request access to Anthropic [here](https://www.anthropic.com/). The
+default model is `claude-2.1`, and you can use the `ANTHROPIC_API_KEY` environment
+variable. To use `anthropic` as your provider you must install the `anthropic`
+extra.
 
 ```shell
 pipx install "llm-term[anthropic]"
@@ -102,8 +102,8 @@ llm-term --provider anthropic
 
 ### MistralAI
 
-[MistralAI](https://mistral.ai/) is a European LLM provider. You can request
-access to the MistralAI [here](https://console.mistral.ai/). The default model is
+You can request access to the [MistralAI](https://mistral.ai/)
+[here](https://console.mistral.ai/). The default model is
 `mistral-small`, and you can use the `MISTRAL_API_KEY` environment variable.
 
 ```shell
