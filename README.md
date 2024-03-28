@@ -3,7 +3,7 @@
 Chat with LLM models directly from the command line.
 
 <p align="center">
-<img width="600" alt="image" src="https://i.imgur.com/1BUegLB.png">
+<img width="600" alt="image" src="https://i.imgur.com/453xL6I.png">
 </p>
 
 [![PyPI](https://img.shields.io/pypi/v/llm-term?color=blue&label=🤖%20llm-term)](https://github.com/juftin/llm-term)
@@ -17,7 +17,8 @@ Chat with LLM models directly from the command line.
 <details>
 <summary>Screen Recording</summary>
 
-https://user-images.githubusercontent.com/49741340/270871763-d872650e-bceb-4da3-8bc6-3e079d55e5a3.mov
+https://github.com/juftin/llm-term/assets/49741340/c305f636-dfcf-4d6f-884f-81d378cf0684
+
 
 </details>
 
