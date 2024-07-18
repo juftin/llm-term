@@ -3,7 +3,7 @@
 Chat with LLM models directly from the command line.
 
 <p align="center">
-<img width="600" alt="image" src="https://i.imgur.com/1BUegLB.png">
+<img width="600" alt="image" src="https://i.imgur.com/453xL6I.png">
 </p>
 
 [![PyPI](https://img.shields.io/pypi/v/llm-term?color=blue&label=🤖%20llm-term)](https://github.com/juftin/llm-term)
@@ -26,6 +26,24 @@ Chat with LLM models directly from the command line.
 
 ```bash
 pipx install llm-term
+```
+
+### Install with Extras
+
+You can install llm-term with extra dependencies for different providers:
+
+```bash
+pipx install "llm-term[anthropic]"
+```
+
+```bash
+pipx install "llm-term[mistralai]"
+```
+
+Or, you can install all the extras:
+
+```bash
+pipx install "llm-term[all]"
 ```
 
 ## Usage
@@ -55,10 +73,10 @@ export LLM_API_KEY="xxxxxxxxxxxxxx"
 ```
 
 Optionally, you can set a custom model. llm-term defaults
-to `gpt-3.5-turbo` (this can also set via the `--model` / `-m` flag in the CLI):
+to `gpt-4o` (this can also set via the `--model` / `-m` flag in the CLI):
 
 ```shell
-export LLM_MODEL="gpt-4"
+export LLM_MODEL="gpt-4o-mini"
 ```
 
 Want to start the conversion directly from the command line? No problem,
@@ -81,15 +99,15 @@ export LLM_SYSTEM_MESSAGE="You are a helpful assistant who talks like a pirate."
 ### OpenAI
 
 By default, llm-term uses OpenAI as your LLM provider. The default model is
-`gpt-3.5-turbo` and you can also use the `OPENAI_API_KEY` environment variable
+`gpt-4o` and you can also use the `OPENAI_API_KEY` environment variable
 to set your API key.
 
 ### Anthropic
 
-Anthropic is a new LLM provider that is currently in private beta. You can
-request access to the beta [here](https://www.anthropic.com/). The default
-model is `claude`, and you can use the `ANTHROPIC_API_KEY` environment variable.
-To use `anthropic` as your provider you must install the `anthropic` extra.
+You can request access to Anthropic [here](https://www.anthropic.com/). The
+default model is `claude-3-5-sonnet-20240620`, and you can use the `ANTHROPIC_API_KEY` environment
+variable. To use `anthropic` as your provider you must install the `anthropic`
+extra.
 
 ```shell
 pipx install "llm-term[anthropic]"
@@ -101,9 +119,9 @@ llm-term --provider anthropic
 
 ### MistralAI
 
-[MistralAI](https://mistral.ai/) is a European LLM provider. You can request
-access to the MistralAI [here](https://console.mistral.ai/). The default model is
-`mistral-small`, and you can use the `MISTRAL_API_KEY` environment variable.
+You can request access to the [MistralAI](https://mistral.ai/)
+[here](https://console.mistral.ai/). The default model is
+`mistral-small-latest`, and you can use the `MISTRAL_API_KEY` environment variable.
 
 ```shell
 pipx install "llm-term[mistralai]"
@@ -113,18 +131,18 @@ pipx install "llm-term[mistralai]"
 llm-term --provider mistralai
 ```
 
-### GPT4All
+### Ollama
 
-GPT4All is a an open source LLM provider. These models run locally on your
+Ollama is a an open source LLM provider. These models run locally on your
 machine, so you don't need to worry about API keys or rate limits. The default
-model is `mistral-7b-openorca.Q4_0.gguf`, and you can see what models are available on the [GPT4All
-Website](https://gpt4all.io/index.html). Models are downloaded automatically when you first use them.
-To use GPT4All as your provider you must install the `gpt4all` extra.
+model is `llama3`, and you can see what models are available on the [Ollama
+Website](https://ollama.com/library). Make sure to
+[download Ollama](https://ollama.com/download) first.
 
-```bash
-pipx install "llm-term[gpt4all]"
+```shell
+ollama pull llama3
 ```
 
 ```shell
-llm-term --provider gpt4all --model mistral-7b-openorca.Q4_0.gguf
+llm-term --provider ollama --model llama3
 ```

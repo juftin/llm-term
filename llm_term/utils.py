@@ -6,7 +6,7 @@ from __future__ import annotations
 
 from pathlib import Path
 from textwrap import dedent
-from typing import Iterator
+from typing import Iterator, TypedDict
 
 from click.exceptions import ClickException
 from langchain.llms.base import BaseLLM
@@ -16,6 +16,7 @@ from langchain_core.messages import BaseMessageChunk
 from prompt_toolkit import PromptSession
 from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
 from prompt_toolkit.history import FileHistory
+from rich.align import Align
 from rich.columns import Columns
 from rich.console import Console
 from rich.live import Live
@@ -31,12 +32,16 @@ def print_header(console: Console, model: str, provider: str) -> None:
     """
     Print the header
     """
+    renderable = (
+        "[bold cyan]  ✺✺✺✺   [/bold cyan]"
+        f"[bold red]{provider}[/bold red]"
+        "[bold cyan]   ✺✺✺✺  [/bold cyan]"
+    )
     console.print(
         Panel(
-            f"[bold red]{__application__}: "
-            f"Chat with Language Models from the Command Line[/bold red]",
+            Align(renderable=renderable, align="center"),
             title=f"[blue bold]{__application__} v{__version__}[/blue bold]",
-            subtitle=f"[yellow bold]{model} ({provider})[/yellow bold]",
+            subtitle=f"[yellow bold]{model}[/yellow bold]",
             style="green bold",
             expand=False,
         ),
@@ -44,45 +49,75 @@ def print_header(console: Console, model: str, provider: str) -> None:
     console.print("")
 
 
-providers: list[str] = [
-    "openai",
-    "anthropic",
-    "gpt4all",
-    "mistralai",
-]
+class ProviderConfig(TypedDict):
+    """
+    Model configuration
+    """
+
+    default_model: str
+    name: str
 
 
-def get_llm(provider: str, api_key: str, model: str | None) -> tuple[BaseChatModel | BaseLLM, str]:
+providers: dict[str, ProviderConfig] = {
+    "openai": ProviderConfig(default_model="gpt-4o", name="OpenAI"),
+    "anthropic": ProviderConfig(default_model="claude-3-5-sonnet-20240620", name="Anthropic"),
+    "mistralai": ProviderConfig(default_model="mistral-small-latest", name="MistralAI"),
+    "ollama": ProviderConfig(default_model="llama3", name="Ollama"),
+}
+
+
+def get_llm(
+    provider: str, api_key: str, model: str | None
+) -> tuple[BaseChatModel | BaseLLM, str, str]:
     """
     Check the credentials
     """
     if provider == "openai":
         from langchain_openai import ChatOpenAI
 
-        chat_model = model or "gpt-3.5-turbo"
-        return ChatOpenAI(openai_api_key=api_key, model_name=chat_model), chat_model
+        chat_model = model or providers[provider]["default_model"]
+        provider_name = providers[provider]["name"]
+        return ChatOpenAI(openai_api_key=api_key, model_name=chat_model), chat_model, provider_name
     elif provider == "anthropic":
-        from langchain_anthropic import ChatAnthropic
+        try:
+            from langchain_anthropic import ChatAnthropic
 
-        chat_model = model or "claude-2.1"
-        return ChatAnthropic(anthropic_api_key=api_key, model_name=chat_model), chat_model
-    elif provider == "gpt4all":
-        from langchain_community.llms import GPT4All
-
-        chat_model = model or "mistral-7b-openorca.Q4_0.gguf"
-        return GPT4All(model=chat_model, allow_download=True), chat_model
+            chat_model = model or providers[provider]["default_model"]
+            provider_name = providers[provider]["name"]
+            return (
+                ChatAnthropic(anthropic_api_key=api_key, model_name=chat_model),
+                chat_model,
+                provider_name,
+            )
+        except ImportError as ie:
+            msg = (
+                "The `anthropic` provider requires the `anthropic` extra to be installed: "
+                'pipx install "llm-term[anthropic]"'
+            )
+            raise ClickException(msg) from ie
     elif provider == "mistralai":
         try:
             from langchain_mistralai import ChatMistralAI
 
-            chat_model = model or "mistral-small"
-            return ChatMistralAI(mistral_api_key=api_key, model=chat_model), chat_model
+            chat_model = model or providers[provider]["default_model"]
+            provider_name = providers[provider]["name"]
+            return (
+                ChatMistralAI(mistral_api_key=api_key, model=chat_model),
+                chat_model,
+                provider_name,
+            )
         except ImportError as ie:
             msg = (
                 "The `mistralai` provider requires the `mistralai` extra to be installed: "
                 'pipx install "llm-term[mistralai]"'
             )
             raise ClickException(msg) from ie
+    elif provider == "ollama":
+        from langchain_community.chat_models import ChatOllama
+
+        chat_model = model or providers[provider]["default_model"]
+        provider_name = providers[provider]["name"]
+        return ChatOllama(model=chat_model), chat_model, provider_name
     else:
         msg = f"Provider {provider} is not supported... yet"
         raise ClickException(msg)

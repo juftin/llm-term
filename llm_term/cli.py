@@ -4,6 +4,9 @@ LLM CLI
 
 from __future__ import annotations
 
+import os
+import runpy
+
 import click
 import rich.traceback
 from rich.console import Console
@@ -11,7 +14,8 @@ from rich.console import Console
 from llm_term.__about__ import __application__, __version__
 from llm_term.utils import chat_session, get_llm, print_header, providers, setup_system_message
 
-rich.traceback.install(show_locals=True)
+debug_mode = os.getenv("DEBUG", None) is not None
+rich.traceback.install(show_locals=debug_mode, suppress=[click, runpy])
 
 
 @click.command()
@@ -32,7 +36,7 @@ rich.traceback.install(show_locals=True)
     envvar="LLM_PROVIDER",
     show_envvar=True,
     default="openai",
-    type=click.Choice(providers),
+    type=click.Choice(list(providers.keys())),
 )
 @click.argument(
     "chat",
@@ -83,8 +87,9 @@ rich.traceback.install(show_locals=True)
     "-a",
     help="The avatar to use",
     type=click.STRING,
-    default="🤓",
+    default="👤",
     show_default=True,
+    envvar="LLM_AVATAR",
 )
 def cli(
     model: str,
@@ -103,8 +108,8 @@ def cli(
     rich_console: Console = Console(width=console)
     chat_message = " ".join(chat)
     try:
-        client, model_name = get_llm(provider=provider, api_key=api_key, model=model)
-        print_header(console=rich_console, model=model_name, provider=provider)
+        client, model_name, provider_name = get_llm(provider=provider, api_key=api_key, model=model)
+        print_header(console=rich_console, model=model_name, provider=provider_name)
         system_message = setup_system_message(message=system)
         chat_session(
             client=client,

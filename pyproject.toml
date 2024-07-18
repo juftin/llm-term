@@ -22,13 +22,13 @@ dependencies = [
   "click~=8.1.7",
   "rich~=13.5.3",
   "prompt-toolkit~=3.0.39",
-  "langchain~=0.1.13",
-  "langchain-community~=0.0.29",
-  "langchain-openai~=0.1.1",
+  "langchain~=0.2.9",
+  "langchain-community~=0.2.7",
+  "langchain-openai~=0.1.17",
   "numpy~=1.24.4; python_version < '3.9'",
   "numpy~=1.26.1; python_version > '3.8'"
 ]
-description = "A simple CLI to chat with OpenAI GPT Models"
+description = "A simple CLI to chat with LLM Models"
 dynamic = ["version"]
 keywords = ["openai", "rich", "cli", "python", "chatgpt"]
 license = "MIT"
@@ -37,10 +37,12 @@ readme = "README.md"
 requires-python = ">=3.8,<4"
 
 [project.optional-dependencies]
-all = ["langchain-anthropic~=0.1.4", "gpt4all~=2.3.2", "langchain-mistralai~=0.1.0"]
-anthropic = ["langchain-anthropic~=0.1.4"]
-gpt4all = ["gpt4all~=2.3.2"]
-mistralai = ["langchain-mistralai~=0.1.0"]
+all = [
+  "langchain-anthropic~=0.1.20",
+  "langchain-mistralai~=0.1.10"
+]
+anthropic = ["langchain-anthropic~=0.1.20"]
+mistralai = ["langchain-mistralai~=0.1.10"]
 
 [project.scripts]
 llm-term = "llm_term.cli:cli"
