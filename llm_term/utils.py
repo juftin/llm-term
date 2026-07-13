@@ -59,33 +59,55 @@ class ProviderConfig(TypedDict):
 
 
 providers: dict[str, ProviderConfig] = {
-    "openai": ProviderConfig(default_model="gpt-4o", name="OpenAI"),
-    "anthropic": ProviderConfig(default_model="claude-3-5-sonnet-20240620", name="Anthropic"),
-    "mistralai": ProviderConfig(default_model="mistral-small-latest", name="MistralAI"),
-    "ollama": ProviderConfig(default_model="llama3", name="Ollama"),
+    "openai": ProviderConfig(default_model="gpt-5.6-sol", name="OpenAI"),
+    "anthropic": ProviderConfig(default_model="claude-sonnet-5", name="Anthropic"),
+    "mistralai": ProviderConfig(default_model="mistral-large-latest", name="MistralAI"),
+    "ollama": ProviderConfig(default_model="llama3.2", name="Ollama"),
 }
 
 
 def get_llm(
-    provider: str, api_key: str, model: str | None
+    provider: str, api_key: str, model: str | None, base_url: str | None = None
 ) -> tuple[BaseChatModel | BaseLLM, str, str]:
     """
-    Check the credentials
+    Check the credentials and return the appropriate LLM client.
+
+    Parameters
+    ----------
+    provider : str
+        The LLM provider to use (openai, anthropic, mistralai, ollama).
+    api_key : str
+        The API key for the provider.
+    model : str | None
+        The model name to use, or None to use the provider default.
+    base_url : str | None
+        An optional base URL for the API endpoint.
+
+    Returns
+    -------
+    tuple[BaseChatModel | BaseLLM, str, str]
+        The LLM client, the model name, and the provider display name.
     """
     if provider == "openai":
         from langchain_openai import ChatOpenAI
 
         chat_model = model or providers[provider]["default_model"]
         provider_name = providers[provider]["name"]
-        return ChatOpenAI(openai_api_key=api_key, model_name=chat_model), chat_model, provider_name
+        kwargs: dict[str, str] = {"openai_api_key": api_key, "model_name": chat_model}
+        if base_url:
+            kwargs["openai_api_base"] = base_url
+        return ChatOpenAI(**kwargs), chat_model, provider_name
     elif provider == "anthropic":
         try:
             from langchain_anthropic import ChatAnthropic
 
             chat_model = model or providers[provider]["default_model"]
             provider_name = providers[provider]["name"]
+            kwargs = {"anthropic_api_key": api_key, "model_name": chat_model}
+            if base_url:
+                kwargs["anthropic_api_url"] = base_url
             return (
-                ChatAnthropic(anthropic_api_key=api_key, model_name=chat_model),
+                ChatAnthropic(**kwargs),
                 chat_model,
                 provider_name,
             )
@@ -101,8 +123,11 @@ def get_llm(
 
             chat_model = model or providers[provider]["default_model"]
             provider_name = providers[provider]["name"]
+            kwargs = {"mistral_api_key": api_key, "model": chat_model}
+            if base_url:
+                kwargs["endpoint"] = base_url
             return (
-                ChatMistralAI(mistral_api_key=api_key, model=chat_model),
+                ChatMistralAI(**kwargs),
                 chat_model,
                 provider_name,
             )
@@ -117,7 +142,10 @@ def get_llm(
 
         chat_model = model or providers[provider]["default_model"]
         provider_name = providers[provider]["name"]
-        return ChatOllama(model=chat_model), chat_model, provider_name
+        kwargs = {"model": chat_model}
+        if base_url:
+            kwargs["base_url"] = base_url
+        return ChatOllama(**kwargs), chat_model, provider_name
     else:
         msg = f"Provider {provider} is not supported... yet"
         raise ClickException(msg)
