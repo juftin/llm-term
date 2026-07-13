@@ -4,9 +4,10 @@ Helper functions for the CLI
 
 from __future__ import annotations
 
+from collections.abc import Iterator
 from pathlib import Path
 from textwrap import dedent
-from typing import Iterator, TypedDict
+from typing import TypedDict
 
 from click.exceptions import ClickException
 from langchain_core.language_models import BaseChatModel
