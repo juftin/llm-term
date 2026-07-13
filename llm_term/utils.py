@@ -9,10 +9,15 @@ from textwrap import dedent
 from typing import Iterator, TypedDict
 
 from click.exceptions import ClickException
-from langchain.llms.base import BaseLLM
-from langchain.schema import AIMessage, BaseMessage, HumanMessage, SystemMessage
 from langchain_core.language_models import BaseChatModel
-from langchain_core.messages import BaseMessageChunk
+from langchain_core.language_models.llms import BaseLLM
+from langchain_core.messages import (
+    AIMessage,
+    BaseMessage,
+    BaseMessageChunk,
+    HumanMessage,
+    SystemMessage,
+)
 from prompt_toolkit import PromptSession
 from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
 from prompt_toolkit.history import FileHistory
@@ -107,7 +112,7 @@ def get_llm(
 
             chat_model = model or providers[provider]["default_model"]
             provider_name = providers[provider]["name"]
-            kwargs = {"anthropic_api_key": api_key, "model_name": chat_model}
+            kwargs = {"anthropic_api_key": api_key, "model": chat_model}
             if base_url:
                 kwargs["anthropic_api_url"] = base_url
             return (
@@ -142,7 +147,7 @@ def get_llm(
             )
             raise ClickException(msg) from ie
     elif provider == "ollama":
-        from langchain_community.chat_models import ChatOllama
+        from langchain_ollama import ChatOllama
 
         chat_model = model or providers[provider]["default_model"]
         provider_name = providers[provider]["name"]
