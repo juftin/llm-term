@@ -62,6 +62,15 @@ rich.traceback.install(show_locals=debug_mode, suppress=[click, runpy])
     type=click.STRING,
 )
 @click.option(
+    "--base-url",
+    "-b",
+    help="The base URL for the API endpoint",
+    envvar="LLM_BASE_URL",
+    show_envvar=True,
+    default=None,
+    type=click.STRING,
+)
+@click.option(
     "--stream/--no-stream",
     help="Stream the response",
     envvar="LLM_STREAM",
@@ -96,6 +105,7 @@ def cli(
     chat: tuple[str, ...],
     system: str | None,
     api_key: str,
+    base_url: str | None,
     stream: bool,
     console: int,
     border: bool,
@@ -108,7 +118,9 @@ def cli(
     rich_console: Console = Console(width=console)
     chat_message = " ".join(chat)
     try:
-        client, model_name, provider_name = get_llm(provider=provider, api_key=api_key, model=model)
+        client, model_name, provider_name = get_llm(
+            provider=provider, api_key=api_key, model=model, base_url=base_url
+        )
         print_header(console=rich_console, model=model_name, provider=provider_name)
         system_message = setup_system_message(message=system)
         chat_session(

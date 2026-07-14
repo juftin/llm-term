@@ -10,11 +10,10 @@ classifiers = [
   "Development Status :: 5 - Production/Stable",
   "Operating System :: OS Independent",
   "Programming Language :: Python",
-  "Programming Language :: Python :: 3.8",
-  "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
   "Programming Language :: Python :: Implementation :: CPython",
   "Programming Language :: Python :: Implementation :: PyPy"
 ]
@@ -22,11 +21,12 @@ dependencies = [
   "click~=8.1.7",
   "rich~=13.5.3",
   "prompt-toolkit~=3.0.39",
-  "langchain~=0.2.9",
-  "langchain-community~=0.2.7",
-  "langchain-openai~=0.1.17",
-  "numpy~=1.24.4; python_version < '3.9'",
-  "numpy~=1.26.1; python_version > '3.8'"
+  "langchain>=1",
+  "langchain-core>=1",
+  "langchain-community>=0.3",
+  "langchain-openai>=1",
+  "langchain-ollama>=0.1",
+  "numpy>=1.26"
 ]
 description = "A simple CLI to chat with LLM Models"
 dynamic = ["version"]
@@ -34,15 +34,15 @@ keywords = ["openai", "rich", "cli", "python", "chatgpt"]
 license = "MIT"
 name = "llm-term"
 readme = "README.md"
-requires-python = ">=3.8,<4"
+requires-python = ">=3.10,<4"
 
 [project.optional-dependencies]
 all = [
-  "langchain-anthropic~=0.1.20",
-  "langchain-mistralai~=0.1.10"
+  "langchain-anthropic>=1",
+  "langchain-mistralai>=1"
 ]
-anthropic = ["langchain-anthropic~=0.1.20"]
-mistralai = ["langchain-mistralai~=0.1.10"]
+anthropic = ["langchain-anthropic>=1"]
+mistralai = ["langchain-mistralai>=1"]
 
 [project.scripts]
 llm-term = "llm_term.cli:cli"
@@ -73,7 +73,7 @@ parallel = true
 source_pkgs = ["llm_term", "tests"]
 
 [[tool.hatch.envs.all.matrix]]
-python = ["3.8", "3.9", "3.10", "3.11", "3.12"]
+python = ["3.10", "3.11", "3.12", "3.13"]
 
 [tool.hatch.envs.default]
 dependencies = [
@@ -175,6 +175,7 @@ ignore = [
   "S107",
   # Ignore complexity
   "C901",
+  "PLC0415",
   "PLR0911",
   "PLR0912",
   "PLR0913",
@@ -207,7 +208,7 @@ select = [
   "W",  # pycodestyle (Warning)
   "YTT"  # flake8-2020
 ]
-target-version = "py38"
+target-version = "py310"
 
 [tool.ruff.flake8-tidy-imports]
 ban-relative-imports = "all"
