@@ -99,11 +99,7 @@ def get_llm(
 
         chat_model = model or providers[provider]["default_model"]
         provider_name = providers[provider]["name"]
-        kwargs: dict[str, object] = {
-            "openai_api_key": api_key,
-            "model_name": chat_model,
-            "temperature": 1,
-        }
+        kwargs: dict[str, str] = {"openai_api_key": api_key, "model_name": chat_model}
         if base_url:
             kwargs["openai_api_base"] = base_url
         return ChatOpenAI(**kwargs), chat_model, provider_name

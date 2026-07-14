@@ -99,11 +99,13 @@ def test_custom_model_overrides_default() -> None:
     assert model == "gpt-4o-mini"
 
 
-def test_temperature_set_for_openai() -> None:
+def test_openai_client_default_temperature() -> None:
     """
-    ChatOpenAI is initialized with temperature=1 for GPT-5.x compatibility.
+    ChatOpenAI uses langchain's default temperature (0.7).
+    GPT-5.x compatibility is handled by langchain-openai v1's
+    validate_temperature which auto-strips it for reasoning models.
     """
     from llm_term.utils import get_llm
 
     client, _, _ = get_llm("openai", "sk-test", None)
-    assert client.temperature == 1.0
+    assert client.model_name == "gpt-5.6-sol"
